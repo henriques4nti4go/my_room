@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "129755680255",
+    "project_id": "myroom-40298",
+    "storage_bucket": "myroom-40298.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129755680255:android:27338a523b35074a05abca",
+        "android_client_info": {
+          "package_name": "com.phsa.myroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwv4W8zQRnjh1rlJs2B6SqKCOvt-QPq9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
