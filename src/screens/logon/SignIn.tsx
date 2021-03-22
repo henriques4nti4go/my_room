@@ -8,112 +8,75 @@ import {
 
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { style } from '_styles';
+import { style,colors } from '_styles';
 import axios from 'axios';
-import firebase from '_firebase';
-import { colors } from '_styles';
+import firebase from '../../config/firebase';
+import styles from '../../styles/style';
 
-WebBrowser.maybeCompleteAuthSession();
 
 interface componentNameProps {
     navigation: any
 }
 
-const Index = (props: componentNameProps) => {
+WebBrowser.maybeCompleteAuthSession();
 
-    let config = {
-        /* This is the CLIENT_ID generated from a Firebase project */
-        clientId: '129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com',
-    };
 
-    const [isLoading,setIsLoading] = useState(true);
+function verifyUserLogged():any {
+    return firebase.auth().currentUser;
+}
 
-    const [request, response, promptAsync] = Google.useIdTokenAuthRequest(config);
+function authUserWithGoogleFirebase(response:any):void {
+    if (response?.type === 'success') {
+        const { id_token } = response.params;
+        
+        const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+        firebase.auth().signInWithCredential(credential);
 
+    }
+}
+
+
+
+function Index(props:componentNameProps) {
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest(
+        {
+            clientId: '129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com',
+        },
+    );
 
     useEffect(() => {
-        if (response?.type === 'success') {
-
-            const { id_token } = response.params;
-            // axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`).then((res) => {
-            //     console.log(res.data)
-            // });
-            const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-            
-            firebase.auth().signInWithCredential(credential);
-        }
+        authUserWithGoogleFirebase(response);
     },[response]);
 
     useEffect(() => {
-        getUserSession();
+        let verify = verifyUserLogged();
+        console.log(verify)
     },[]);
 
-    async function getUserSession() {
-        setIsLoading(true);
-        
-            firebase.auth().onAuthStateChanged((user:any) => {
-                console.log(user)
-                if (user) props.navigation.navigate('Home');
-                setIsLoading(false);
-            });
-    }
-
-    if (isLoading) return <ActivityIndicator style={{alignSelf: 'center'}} animating={true} />;
+    // function goToHomeWithLogged(object:any) {
+    //     if (object) {
+    //         props.navigation.navigate('Home');
+    //     }
+    // }
 
     return (
-        <View style={[style.body,style.container]}>
-            <View
-            style={[
-                style.align,
-                style.container,
-            ]}
-            >
-                <TextPaper
-                style={{
-                    fontSize: 50,
-                    fontWeight: 'bold',
-                    color: colors.primary
-                }}
-                >
-                    MyRoom
-                </TextPaper>
-            </View>
-            <View
-            style={[
-                {
-                    flex: 0.5,
-                    alignItems:'center',
-                }
-            ]}
-            >
+        <View
+        style={[
+            styles.container,
+            styles.align
+        ]}
+        >
+            <View>
                 <Button
+                style={{backgroundColor:colors.PRIMARY}}
                 mode='contained'
-                style={[
-                    style.button,
-                    {
-                        backgroundColor: colors.primary
-                    }
-                ]}
-                onPress={ async () => {
-                    await promptAsync();
-                }}
+                onPress={() => promptAsync()}
                 >
                     Acessar
                 </Button>
-                {/* <Button
-                onPress={async() => {
-                    await firebase.auth().signOut().then(() => {
-                        console.log('ok')
-                    })
-                }}
-                >
-                    Sair
-                </Button> */}
             </View>
         </View>
     );
-};
+}
 
 export default Index;
-
-

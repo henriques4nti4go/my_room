@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet,FlatList, TouchableOpacity } from 'react-native';
+import { Text, View,StyleSheet,FlatList, TouchableOpacity } from 'react-native';
 import { AirbnbRating } from "react-native-elements";
 import {style} from '_styles';
 import {
@@ -9,7 +9,7 @@ import {
   Button
 } from 'react-native-paper';
 import { connect } from 'react-redux';
-
+import firebase from 'firebase';
 import Data from '../../test/GenerateData';
 
 
@@ -27,6 +27,9 @@ const Index = (props: componentNameProps) => {
         style.container,
         style.body
     ]}>
+      <View>
+        <Button onPress={() => firebase.auth().signOut()}>sair</Button>
+      </View>
       <View style={[
         style.align,
       ]}>
