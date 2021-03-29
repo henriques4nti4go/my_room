@@ -1,1 +1,0 @@
-export const db_name:string = 'my_database';

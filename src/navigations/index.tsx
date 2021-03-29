@@ -3,9 +3,9 @@ import { Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SignIn from '../screens/logon/SignIn';
-import Home from '../screens/dashboard/Home';
-import Room from '../screens/dashboard/Room/Index';
+import SignIn from '_screens/logon/SignIn';
+import Home from '_screens/dashboard/Home';
+import Room from '_screens/dashboard/Room/Index';
 
 const Stack = createStackNavigator();
 

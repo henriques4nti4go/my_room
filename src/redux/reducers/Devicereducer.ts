@@ -8,11 +8,14 @@ const initialState:{
 
 const Reducer = (state:any = initialState, action:any) => {
     
-    if (action.type === 'DEVICE_THEME') {
-        action.payload.device_theme = state.device_theme;
-    }
+    switch (action.type) {
+        case 'USER_TOKEN':
+            
+            break;
     
-    return state;
+        default:
+            return state;
+    }
 }
 
 export default Reducer;

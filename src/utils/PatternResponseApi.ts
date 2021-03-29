@@ -1,6 +1,6 @@
-interface PatternResponse {
+export default interface PatternResponse {
     code:number;
     descriptionCode:string;
     error:boolean;
-    response:object;
+    response:any;
 }

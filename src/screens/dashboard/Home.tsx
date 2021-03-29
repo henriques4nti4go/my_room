@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View,StyleSheet,FlatList, TouchableOpacity } from 'react-native';
 import { AirbnbRating } from "react-native-elements";
-import {style} from '_styles';
+import {style} from '_styles/index';
 import {
   Card,
   Title,
@@ -13,15 +13,14 @@ import firebase from 'firebase';
 import Data from '../../test/GenerateData';
 
 
-
 let data = new Data(5).returnData();
 
 interface componentNameProps {
-  navigation:any
+  navigation:any;
+  user_access_token:string;
 }
 
 const Index = (props: componentNameProps) => {
-  
   return (
     <View style={[
         style.container,
@@ -82,7 +81,7 @@ const Index = (props: componentNameProps) => {
 };
 
 const mapState = (state:any) => ({
-  device_theme: state.device.device_theme,
+  user_access_token: state.user.user_access_token,
 })
 
 const mapDispatch = {

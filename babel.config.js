@@ -25,6 +25,7 @@ module.exports = function(api) {
             _firebase: './src/config/firebase',
             _navigations: './src/navigations',
             _config: './src/config',
+            _controllers:'./src/app/controllers',
           },
         },
       ],

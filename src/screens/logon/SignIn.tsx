@@ -5,7 +5,7 @@ import {
     Text as TextPaper,
 } from 'react-native-paper';
 
-import {ID_CLIENT_GOOGLE,DB_HOST} from "@env";
+import {ID_CLIENT_GOOGLE} from "@env";
 
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
@@ -13,16 +13,17 @@ import { style,colors } from '_styles/index';
 import axios from 'axios';
 import firebase from '../../config/firebase';
 import styles from '../../styles/style';
-// import {ID_CLIENT_GOOGLE} from '_config/index';
 import ActivityIndicator from '_components/ActivityIndicator';
 import {routes} from '_config/routes';
-import ParttersResponse from '_utils/PattherResponseApi'
+import PatternResponse from '_utils/PatternResponseApi';
+import {connect} from 'react-redux';
 
 
 WebBrowser.maybeCompleteAuthSession();
 
 interface componentNameProps {
-    navigation: any
+    navigation: any;
+    setTokenAccess:Function;
 }
 
 
@@ -74,7 +75,6 @@ function Index(props:componentNameProps) {
     useEffect(() => {
         verifyUser();
     },[]);
-    verifyUserLogged();
 
     async function verifyUser() {
         setIsLoading(true);
@@ -83,6 +83,7 @@ function Index(props:componentNameProps) {
         if (token_id) {
             const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
             if (!auth.error) {
+                props.setTokenAccess(auth.response.token);
                 props.navigation.navigate('Home')
             }
 
@@ -111,12 +112,6 @@ function Index(props:componentNameProps) {
             await verifyUser();
         }
     }
-
-    // function goToHomeWithLogged(object:any) {
-    //     if (object) {
-    //         props.navigation.navigate('Home');
-    //     }
-    // }
 
     if (isLoading) return <ActivityIndicator />
 
@@ -159,4 +154,21 @@ function Index(props:componentNameProps) {
     );
 }
 
-export default Index;
+const mapStateToProps = (state:any) => {
+    return{
+    }
+};
+
+const mapDispatchToProp = ( dispatch:any ) => {
+    return{
+      setTokenAccess: (value:string) =>{ dispatch({
+          payload:{
+              user_access_token:value
+          },
+          type:'USER_ACCESS_TOKEN'
+      })},
+    }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProp)(Index);

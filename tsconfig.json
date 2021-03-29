@@ -12,6 +12,10 @@
       "_components/*": ["./src/components/*"],
       "_config/*": ["./src/config/*"],
       "_styles/*": ["./src/styles"],
+      "_navigations/*": ["./src/navigations/*"],
+      "_screens/*": ["./src/screens/*"],
+      "_utils/*": ["./src/utils/*"],
+      "_controllers/*":["./src/app/controllers/*"],
       "@env":["./.env"]
     }
   }

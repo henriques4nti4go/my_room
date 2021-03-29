@@ -7,8 +7,6 @@ import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import Reduces from './src/redux/reducer';
 
-import signIn from 'screens/logon/SignIn.tsx';
-import home from 'screens/dashboard/Home.tsx';
 import Navigations from '_navigations';
 const store = createStore(Reduces,applyMiddleware(ReduxThunk));
 
