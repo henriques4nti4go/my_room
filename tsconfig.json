@@ -7,6 +7,12 @@
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "_components/*": ["./src/components/*"],
+      "_config/*": ["./src/config/*"],
+      "_styles/*": ["./src/styles"],
+      "@env":["./.env"]
+    }
   }
 }

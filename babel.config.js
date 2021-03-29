@@ -3,6 +3,14 @@ module.exports = function(api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
+      ["module:react-native-dotenv",{
+        "moduleName": "@env",
+        "path": ".env",
+        "blacklist": null,
+        "whitelist": null,
+        "safe": false,
+        "allowUndefined": true
+      }],
       [
         'module-resolver',
         {
@@ -16,6 +24,7 @@ module.exports = function(api) {
             _screens: './src/screens',
             _firebase: './src/config/firebase',
             _navigations: './src/navigations',
+            _config: './src/config',
           },
         },
       ],
