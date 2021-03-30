@@ -50,7 +50,6 @@ class OperationsAuthUser{
             });
 
             return data;
-
         } catch (error) {
             return error.response.data;
         }
@@ -78,7 +77,6 @@ function Index(props:componentNameProps) {
 
     async function verifyUser() {
         setIsLoading(true);
-
         const token_id = await verifyUserLogged();
         if (token_id) {
             const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();

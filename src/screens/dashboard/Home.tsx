@@ -6,7 +6,8 @@ import {
   Card,
   Title,
   Paragraph,
-  Button
+  Button,
+  Drawer
 } from 'react-native-paper';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
@@ -20,7 +21,21 @@ interface componentNameProps {
   user_access_token:string;
 }
 
+
+
+
 const Index = (props: componentNameProps) => {
+
+  return (
+    <Drawer.Section title="Some title" >
+      <Drawer.Item
+        label="First Item"
+        active={false}
+        onPress={() => console.log('drawer')}
+      />
+    </Drawer.Section>
+  );
+
   return (
     <View style={[
         style.container,
