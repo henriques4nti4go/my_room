@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 200
+    },
+    alignPattern:{
+        alignSelf: 'center'
+    },
+    mb1: {
+        marginBottom:10
     }
 });
 export default styles;

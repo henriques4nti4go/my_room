@@ -26,15 +26,15 @@ interface componentNameProps {
 
 const Index = (props: componentNameProps) => {
 
-  return (
-    <Drawer.Section title="Some title" >
-      <Drawer.Item
-        label="First Item"
-        active={false}
-        onPress={() => console.log('drawer')}
-      />
-    </Drawer.Section>
-  );
+  // return (
+  //   <Drawer.Section title="Some title" >
+  //     <Drawer.Item
+  //       label="First Item"
+  //       active={false}
+  //       onPress={() => console.log('drawer')}
+  //     />
+  //   </Drawer.Section>
+  // );
 
   return (
     <View style={[

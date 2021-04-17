@@ -43,15 +43,18 @@ class OperationsAuthUser{
         };
         
         try {
+
             let {data} = await axios({
                 method: 'POST',
                 url: routes.logon.signIn,
                 data: params
-            });
-
+            }); 
+            
             return data;
         } catch (error) {
+            console.log(error)
             return error.response.data;
+           
         }
         
     }
@@ -78,14 +81,17 @@ function Index(props:componentNameProps) {
     async function verifyUser() {
         setIsLoading(true);
         const token_id = await verifyUserLogged();
+        
         if (token_id) {
             const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
+            console.log(auth)
             if (!auth.error) {
                 props.setTokenAccess(auth.response.token);
-                props.navigation.navigate('Home')
+                props.navigation.navigate('Home');
             }
 
         }
+        // props.navigation.navigate('Home');
         setIsLoading(false);
     }
 
@@ -103,12 +109,14 @@ function Index(props:componentNameProps) {
     }
 
     async function authUserWithGoogleFirebase(response:any) {
+        setIsLoading(true)
         if (response?.type === 'success') {
             const { id_token } = response.params;
             const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
             let resp = await firebase.auth().signInWithCredential(credential);
             await verifyUser();
         }
+        setIsLoading(false);
     }
 
     if (isLoading) return <ActivityIndicator />
