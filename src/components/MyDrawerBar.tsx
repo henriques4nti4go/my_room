@@ -9,6 +9,8 @@ import {
     Switch
 } from 'react-native-paper';
 
+import { connect } from 'react-redux';
+
 import firebase from 'firebase';
 
 interface componentNameProps {}
@@ -16,9 +18,42 @@ interface menuElementsRoute {
     key:string;
     name:string;
 }
-const componentName = ({navigation,state}:any) => {
-    
 
+const ProfileImage = (profile_user:any) => {
+    let {
+        profile_photo,
+    } = profile_user;
+    console.log(profile_photo)
+    if (!profile_photo) {
+        return (
+            <Image
+            style={{
+                width: 85,
+                height: 85,
+            }}
+            source={require('_assets/profile-user.png')}
+            />
+        );
+    }
+
+    return (
+        <Image
+        style={{
+            width: 85,
+            height: 85,
+        }}
+        source={{uri: profile_user.profile_photo}}
+        />
+    );
+} 
+
+const componentName = ({navigation,state,profile_user}:any) => {
+    
+    let {
+        name,
+        user_name,
+    } = profile_user;
+    
     return (
         <View style={styles.container}>
             <View
@@ -38,17 +73,10 @@ const componentName = ({navigation,state}:any) => {
                     backgroundColor: 'white'
                 }}
                 >
-                    <Image
-                    style={{
-                        width: 85,
-                        height: 85,
-                    }} 
-                    tintColor='red'
-                    source={require('_assets/profile-user.png')} 
-                    /> 
+                    <ProfileImage {...profile_user} />
                 </View>
-                <Text>Hi, User!</Text>
-                <Text style={{fontWeight: 'bold'}}>@new_user</Text>
+                <Text>Hi, {name}!</Text>
+                <Text style={{fontWeight: 'bold'}}>@{user_name}</Text>
             </View>
             <View
             style={{flex:6}}
@@ -116,7 +144,15 @@ function MenuOptions({navigation,state}:any) {
     
 }
 
-export default componentName;
+const mapState = (state:any) => ({
+    profile_user: state.profile_user,
+  })
+  
+  const mapDispatch = {
+  }
+  
+export default connect(mapState,mapDispatch)(componentName);
+
 
 const styles = StyleSheet.create({
     container: {

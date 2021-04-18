@@ -1,9 +1,11 @@
 import InterfaceReducer from './InterfaceReducer';
 
 const InitialState:{
-    user_access_token:string
+    user_access_token:string,
+    user_id: number,
 } = {
-    user_access_token: ''
+    user_access_token: '',
+    user_id: 0,
 };
 
 const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
@@ -11,6 +13,8 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
         case 'USER_ACCESS_TOKEN':
             state.user_access_token  =  action.payload.user_access_token;
             break;
+        case 'USER_ID':
+            state.user_id = action.payload.user_id; 
     }
     return state;
 }

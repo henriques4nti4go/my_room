@@ -25,17 +25,7 @@ interface componentNameProps {
 
 
 const Index = (props: componentNameProps) => {
-
-  // return (
-  //   <Drawer.Section title="Some title" >
-  //     <Drawer.Item
-  //       label="First Item"
-  //       active={false}
-  //       onPress={() => console.log('drawer')}
-  //     />
-  //   </Drawer.Section>
-  // );
-
+  console.log(props)
   return (
     <View style={[
         style.container,
@@ -97,6 +87,7 @@ const Index = (props: componentNameProps) => {
 
 const mapState = (state:any) => ({
   user_access_token: state.user.user_access_token,
+  profile_user: state.profile_user,
 })
 
 const mapDispatch = {

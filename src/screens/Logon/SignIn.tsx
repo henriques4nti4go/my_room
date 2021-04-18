@@ -24,6 +24,8 @@ WebBrowser.maybeCompleteAuthSession();
 interface componentNameProps {
     navigation: any;
     setTokenAccess:Function;
+    setUserId:Function,
+    setInfoProfileUser:Function,
 }
 
 
@@ -46,13 +48,14 @@ class OperationsAuthUser{
 
             let {data} = await axios({
                 method: 'POST',
+                headers:{
+                    'token':this.token
+                },
                 url: routes.logon.signIn,
-                data: params
             }); 
-            
             return data;
         } catch (error) {
-            console.log(error)
+            console.log(error.response.data);
             return error.response.data;
            
         }
@@ -84,9 +87,25 @@ function Index(props:componentNameProps) {
         
         if (token_id) {
             const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
-            console.log(auth)
+            
             if (!auth.error) {
-                props.setTokenAccess(auth.response.token);
+                let {
+                    user,
+                    user_id,
+                    name,
+                    user_name,
+                } = auth.response.profile;
+                let {
+                    url,
+                } = auth.response.profile_photo;
+                props.setTokenAccess(auth.response.token_jwt);
+                props.setUserId({user_id});
+                props.setInfoProfileUser({
+                    email:user.email,
+                    name,
+                    user_name,
+                    profile_photo: url
+                });
                 props.navigation.navigate('Home');
             }
 
@@ -132,18 +151,17 @@ function Index(props:componentNameProps) {
             style={[
                 styles.align,
                 {
-                    flex:3
+                    flex:3,
+                    width: '80%'
                 }
             ]}
             >
-                <TextPaper
+                <Image 
                 style={{
-                    fontSize:50,
-                    fontWeight: 'bold'
+                    width: '100%',
+                    height: '10%'
                 }}
-                >
-                    MyRoom
-                </TextPaper>
+                source={require('_assets/my_room.png')} />
             </View>
             <View
             style={{
@@ -151,9 +169,16 @@ function Index(props:componentNameProps) {
             }}
             >
                 <TouchableOpacity
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent:'center',
+                    shadowColor: "#000",
+                }}
                 onPress={() => promptAsync()}
                 >
-                    <Image style={{width:50,height:50}} source={require('_assets/google.png')} />
+                    <Image style={{width:30,height:30,marginRight:10}} source={require('_assets/google.png')} />
+                    <Text style={{fontWeight:'bold'}}>Continue com Google</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -173,6 +198,14 @@ const mapDispatchToProp = ( dispatch:any ) => {
           },
           type:'USER_ACCESS_TOKEN'
       })},
+      setUserId: (value:object) => { dispatch({
+          payload: value,
+          type: 'USER_ID'
+      })},
+      setInfoProfileUser: (value: object) => { dispatch({
+          payload: value,
+          type: 'SET_PROFILE_USER_INFORMATION',
+      })}
     }
 }
 
