@@ -8,6 +8,7 @@ const InitialState:{
     city:string,
     country:string,
     district:string,
+    bio:string
 } = {
     email:'',
     profile_photo:'',
@@ -16,6 +17,7 @@ const InitialState:{
     city:'',
     country:'',
     district:'',
+    bio: '',
 };
 
 const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
@@ -29,6 +31,11 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
             state.name              =   action.payload.name;
             state.user_name         =   action.payload.user_name;
             state.profile_photo     =   action.payload.profile_photo;
+            state.bio               =   action.payload.bio
+            break;
+        case 'UPDATE_PROFILE_USER':
+            state.name              =   action.payload.name;
+            state.bio               =   action.payload.bio
             break;
     }
     return state;

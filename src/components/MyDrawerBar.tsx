@@ -8,9 +8,10 @@ import {
     Button as ButtonPaper,
     Switch
 } from 'react-native-paper';
-
+import ProfileImage from '_components/Profile/ProfileImage';
+import ProfileInformation from '_components/Profile/ProfileInformation';
 import { connect } from 'react-redux';
-
+import {colors} from '_styles/index';
 import firebase from 'firebase';
 
 interface componentNameProps {}
@@ -18,34 +19,6 @@ interface menuElementsRoute {
     key:string;
     name:string;
 }
-
-const ProfileImage = (profile_user:any) => {
-    let {
-        profile_photo,
-    } = profile_user;
-    console.log(profile_photo)
-    if (!profile_photo) {
-        return (
-            <Image
-            style={{
-                width: 85,
-                height: 85,
-            }}
-            source={require('_assets/profile-user.png')}
-            />
-        );
-    }
-
-    return (
-        <Image
-        style={{
-            width: 85,
-            height: 85,
-        }}
-        source={{uri: profile_user.profile_photo}}
-        />
-    );
-} 
 
 const componentName = ({navigation,state,profile_user}:any) => {
     
@@ -64,19 +37,8 @@ const componentName = ({navigation,state,profile_user}:any) => {
                 flex:4
             }}
             >
-                <View
-                style={{
-                    borderWidth: 1,
-                    borderColor: 'rgba(1,1,1,0.1)',
-                    borderRadius: 100,
-                    padding: 5,
-                    backgroundColor: 'white'
-                }}
-                >
-                    <ProfileImage {...profile_user} />
-                </View>
-                <Text>Hi, {name}!</Text>
-                <Text style={{fontWeight: 'bold'}}>@{user_name}</Text>
+                <ProfileImage {...profile_user} />
+                <ProfileInformation {...profile_user}/>
             </View>
             <View
             style={{flex:6}}
@@ -88,7 +50,7 @@ const componentName = ({navigation,state,profile_user}:any) => {
                 flex: 1
             }}
             >
-                <Switch value={true}  />
+                {/* <Switch value={true}  /> */}
                 
             </View>
             <View
@@ -96,7 +58,7 @@ const componentName = ({navigation,state,profile_user}:any) => {
             >
                 <Divider />
                 <ButtonPaper
-                color='red' 
+                color={colors.PRIMARY} 
                 mode='text' 
                 onPress={() => {
                     firebase.auth().signOut().then((res) => {
@@ -133,6 +95,7 @@ function MenuOptions({navigation,state}:any) {
             <ButtonPaper
             icon={icons_name[name.toLowerCase()]} 
             mode='text'
+            color={colors.PRIMARY}
             disabled={name == current_route}
             key={key}
             contentStyle={{justifyContent: 'flex-start'}}

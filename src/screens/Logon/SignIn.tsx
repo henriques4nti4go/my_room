@@ -94,6 +94,7 @@ function Index(props:componentNameProps) {
                     user_id,
                     name,
                     user_name,
+                    bio
                 } = auth.response.profile;
                 let {
                     url,
@@ -104,7 +105,8 @@ function Index(props:componentNameProps) {
                     email:user.email,
                     name,
                     user_name,
-                    profile_photo: url
+                    profile_photo: url,
+                    bio
                 });
                 props.navigation.navigate('Home');
             }

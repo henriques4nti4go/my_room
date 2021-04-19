@@ -8,6 +8,7 @@ import Home from '_screens/dashboard/Home';
 import Room from '_screens/dashboard/Room/Index';
 import Profile from '_screens/dashboard/Profile/index';
 import UserInformationRegistration from '_screens/Logon/UserInformationRegistration';
+import EditProfile from '_screens/dashboard/Profile/EditProfile';
 import Configurations from '_screens/dashboard/Configurations/index';
 import { createStackNavigator } from '@react-navigation/stack';
 import MyDrawerBar from '_components/MyDrawerBar';
@@ -35,6 +36,7 @@ function App() {
             <Stack.Screen options={{headerShown: false}} name="Room" component={Room} />
             <Stack.Screen options={{headerShown: false}} name="Home" component={DrawerNav} />
             <Stack.Screen options={{headerShown: false}} name="UserInformationRegistration" component={UserInformationRegistration} />
+            <Stack.Screen options={{headerShown: false}} name="EditProfile" component={EditProfile} />
         </Stack.Navigator>
     );    
 }

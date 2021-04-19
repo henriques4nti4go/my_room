@@ -25,7 +25,16 @@ interface componentNameProps {
 
 
 const Index = (props: componentNameProps) => {
-  console.log(props)
+  return (
+    <View
+    style={[
+      style.body,
+      style.container,
+    ]}
+    >
+      
+    </View>
+  );
   return (
     <View style={[
         style.container,
