@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { Text, View,StyleSheet,FlatList, TouchableOpacity } from 'react-native';
+import * as React  from 'react';
+import { Text, View,StyleSheet,FlatList, TouchableOpacity, } from 'react-native';
 import { AirbnbRating } from "react-native-elements";
 import {style} from '_styles/index';
 import {
-  Card,
   Title,
   Paragraph,
   Button,
@@ -12,6 +11,11 @@ import {
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import Data from '../../test/GenerateData';
+import axios from 'axios';
+import { endpoints } from '_config/endpoints';
+import Card from '_components/organisms/Card';
+import ActivityIndicator  from '_components/ActivityIndicator';
+
 
 
 let data = new Data(5).returnData();
@@ -19,12 +23,60 @@ let data = new Data(5).returnData();
 interface componentNameProps {
   navigation:any;
   user_access_token:string;
+  setRoomSelected:Function
 }
 
 
-
-
 const Index = (props: componentNameProps) => {
+  const [rooms,setRooms] = React.useState([]);
+  const [loading,setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    getRooms();
+  },[]);
+
+  function RoomContent(item:any) {
+    return (
+      <TouchableOpacity
+      onPress={() => {
+        props.setRoomSelected(item.id)
+        props.navigation.navigate('MessagesRoom')
+      }}
+      style={{minHeight:150}}
+      >
+        <View>
+          <Text style={{fontSize:30}}>
+            {item.roomDetails.title}
+          </Text>
+        </View>
+        <View style={{justifyContent: 'space-between',flexDirection: 'row'}}>
+          <Text>pessoas</Text>
+          <Text>5,1</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  async function getRooms() {
+    
+    setIsLoading(true)
+    try {
+      const {data} = await axios({
+        url: endpoints.room.get_rooms,
+        method: 'POST',
+        headers: {
+          "token": props.user_access_token
+        }
+      })
+      if (!data.error) setRooms(data.response.rooms);
+      
+    } catch (error:any) {
+      error.response.data
+    }
+    setIsLoading(false);
+  }
+
+  if (loading) return <ActivityIndicator />
+
   return (
     <View
     style={[
@@ -32,7 +84,15 @@ const Index = (props: componentNameProps) => {
       style.container,
     ]}
     >
-      
+      { rooms!= null 
+      && rooms.length > 0
+      &&
+      <FlatList 
+      data={rooms}
+      keyExtractor={(item,id) => String(id)}
+      renderItem={({item}) => <Card><RoomContent {...item} /></Card>}
+      />
+      }
     </View>
   );
   return (
@@ -99,8 +159,15 @@ const mapState = (state:any) => ({
   profile_user: state.profile_user,
 })
 
-const mapDispatch = {
-  toggleOn: () => ({ type: 'TOGGLE_IS_ON' })
+const mapDispatch = (dispatch:any) => {
+  return {
+    setRoomSelected: (value:string) =>{ dispatch({
+      payload:{
+          room_selected:value
+      },
+      type:'ROOM_SELECTED'
+    })},
+  }
 }
 
 export default connect(mapState,mapDispatch)(Index);

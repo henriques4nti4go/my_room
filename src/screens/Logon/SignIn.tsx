@@ -17,7 +17,7 @@ import ActivityIndicator from '_components/ActivityIndicator';
 import {endpoints} from '_config/endpoints';
 import {connect} from 'react-redux';
 import {IHTTPResponse} from '_classes/interfaces/IHTTPResponse.interface';
-import {RequestResponsePattern} from '_classes/RequestResponsePattern.class'
+
 WebBrowser.maybeCompleteAuthSession();
 
 
@@ -67,8 +67,6 @@ interface componentNameProps {
 
 function Index(props:componentNameProps) {
     const [isLoading,setIsLoading] = useState(true);
-    const [token_refresh,setTokenRefresh] = useState(null);
-    const [token_jwt,setTokenJwt] = useState(null);
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest(
         {
             clientId: ID_CLIENT_GOOGLE,
@@ -84,31 +82,32 @@ function Index(props:componentNameProps) {
         verifyUser();
     },[]);
 
-    async function getToken(){
+    async function getToken(token_id:string){
         try {
             let {data} = await axios({
                 method: 'POST',
                 url: endpoints.token,
                 headers:{
-                    'token_oauth': token_refresh,
+                    'token_oauth': token_id,
                 }
             });
-            setTokenJwt(data.response.token_jwt);
+            return data.response;
         } catch (error:any) {
             error.response.data 
         }
     }
 
-    async function signIn():Promise<IHTTPResponse> {
+    async function signIn(token_id:string):Promise<IHTTPResponse> {
         try {
-            await getToken();
-            const {data} = await axios({
+            let response = await getToken(token_id);
+            let {data} = await axios({
                 method: 'POST',
                 url: endpoints.user.get_user,
                 headers:{
-                    'token': token_jwt,
+                    'token': response.token_jwt,
                 }
             });
+            data.response['token_jwt'] = response.token_jwt;
             return data;
         } catch (error:any) {
             return error.response.data;
@@ -121,8 +120,8 @@ function Index(props:componentNameProps) {
         const token_id:any = await verifyUserLogged();
         if (token_id) {
             // const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
-            setTokenRefresh(token_id);
-            const response_data_user = await signIn();
+            const response_data_user = await signIn(token_id);
+            
             if (!response_data_user.error) {
                 let {
                     user,
@@ -134,7 +133,8 @@ function Index(props:componentNameProps) {
                 let {
                     url,
                 } = response_data_user.response.profile_photo;
-                props.setTokenAccess(token_jwt);
+                console.log(response_data_user)
+                props.setTokenAccess(response_data_user.response.token_jwt);
                 props.setUserId({user_id});
                 props.setInfoProfileUser({
                     email:user.email,
