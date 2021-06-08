@@ -16,6 +16,7 @@
       "_screens/*": ["./src/screens/*"],
       "_utils/*": ["./src/utils/*"],
       "_controllers/*":["./src/app/controllers/*"],
+      "_classes/*": ["./src/classes/*"],
       "@env":["./.env"]
     }
   }

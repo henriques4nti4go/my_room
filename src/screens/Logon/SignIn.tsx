@@ -9,17 +9,17 @@ import {ID_CLIENT_GOOGLE} from "@env";
 
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { style,colors } from '_styles/index';
 import axios from 'axios';
-import firebase from '../../config/firebase';
+import firebase from '_config/firebase/firebase';
+// import firebase from 'firebase';
 import styles from '../../styles/style';
 import ActivityIndicator from '_components/ActivityIndicator';
-import {routes} from '_config/routes';
-import PatternResponse from '_utils/PatternResponseApi';
+import {endpoints} from '_config/endpoints';
 import {connect} from 'react-redux';
-
-
+import {IHTTPResponse} from '_classes/interfaces/IHTTPResponse.interface';
+import {RequestResponsePattern} from '_classes/RequestResponsePattern.class'
 WebBrowser.maybeCompleteAuthSession();
+
 
 interface componentNameProps {
     navigation: any;
@@ -29,51 +29,54 @@ interface componentNameProps {
 }
 
 
-class OperationsAuthUser{
-    private token:string;
+// class OperationsAuthUser{
+//     private token:string;
 
-    constructor(token:string){
-        this.token = token;
-    }
+//     constructor(token:string){
+//         this.token = token;
+//     }
 
-    /**
-     * authUser
-     */
-    public async authUser() {
-        let params = {
-            token_id: this.token
-        };
+//     /**
+//      * authUser
+//      */
+//     public async authUser() {
+//         let params = {
+//             token_id: this.token
+//         };
         
-        try {
+//         try {
 
-            let {data} = await axios({
-                method: 'POST',
-                headers:{
-                    'token':this.token
-                },
-                url: routes.logon.signIn,
-            }); 
-            return data;
-        } catch (error) {
-            console.log(error.response.data);
-            return error.response.data;
+//             let {data} = await axios({
+//                 method: 'POST',
+//                 headers:{
+//                     'token':this.token
+//                 },
+//                 url: routes.logon.signIn,
+//             }); 
+//             return data;
+//         } catch (error) {
+//             // console.log(error.response.data);
+//             return error.response.data;
            
-        }
+//         }
         
-    }
+//     }
 
-}
+// }
 
 
 function Index(props:componentNameProps) {
     const [isLoading,setIsLoading] = useState(true);
+    const [token_refresh,setTokenRefresh] = useState(null);
+    const [token_jwt,setTokenJwt] = useState(null);
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest(
         {
             clientId: ID_CLIENT_GOOGLE,
         },
     );
-
+    
     useEffect(() => {
+        // firebase.auth().signOut()
         authUserWithGoogleFirebase(response);
     },[response]);
 
@@ -81,25 +84,57 @@ function Index(props:componentNameProps) {
         verifyUser();
     },[]);
 
+    async function getToken(){
+        try {
+            let {data} = await axios({
+                method: 'POST',
+                url: endpoints.token,
+                headers:{
+                    'token_oauth': token_refresh,
+                }
+            });
+            setTokenJwt(data.response.token_jwt);
+        } catch (error:any) {
+            error.response.data 
+        }
+    }
+
+    async function signIn():Promise<IHTTPResponse> {
+        try {
+            await getToken();
+            const {data} = await axios({
+                method: 'POST',
+                url: endpoints.user.get_user,
+                headers:{
+                    'token': token_jwt,
+                }
+            });
+            return data;
+        } catch (error:any) {
+            return error.response.data;
+        }
+    }
+
     async function verifyUser() {
+
         setIsLoading(true);
-        const token_id = await verifyUserLogged();
-        
+        const token_id:any = await verifyUserLogged();
         if (token_id) {
-            const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
-            
-            if (!auth.error) {
+            // const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
+            setTokenRefresh(token_id);
+            const response_data_user = await signIn();
+            if (!response_data_user.error) {
                 let {
                     user,
                     user_id,
                     name,
                     user_name,
                     bio
-                } = auth.response.profile;
+                } = response_data_user.response.profile;
                 let {
                     url,
-                } = auth.response.profile_photo;
-                props.setTokenAccess(auth.response.token_jwt);
+                } = response_data_user.response.profile_photo;
+                props.setTokenAccess(token_jwt);
                 props.setUserId({user_id});
                 props.setInfoProfileUser({
                     email:user.email,
@@ -112,15 +147,14 @@ function Index(props:componentNameProps) {
             }
 
         }
-        // props.navigation.navigate('Home');
         setIsLoading(false);
     }
 
-    async function verifyUserLogged() {
+    async function verifyUserLogged():Promise<string> {
         return new Promise((resolve, reject) => {
             try {
                 firebase.auth().onAuthStateChanged(async (user) => {
-                    const getIdToken = await user?.getIdToken();
+                    const getIdToken:any = await user?.getIdToken();
                     resolve(getIdToken);
                 });
             } catch (error) {
@@ -131,10 +165,12 @@ function Index(props:componentNameProps) {
 
     async function authUserWithGoogleFirebase(response:any) {
         setIsLoading(true)
+        
         if (response?.type === 'success') {
             const { id_token } = response.params;
             const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
             let resp = await firebase.auth().signInWithCredential(credential);
+            
             await verifyUser();
         }
         setIsLoading(false);

@@ -16,7 +16,7 @@ import {
     Icon
 } from 'react-native-elements';
 import axios from 'axios';
-import {routes} from '_config/routes';
+import {endpoints} from '_config/endpoints';
 import { colors } from '_styles/index';
 
 interface componentNameProps {
@@ -38,7 +38,7 @@ const Index = (props: componentNameProps) => {
         setLoading(true);
         try {
             let {data}:any = await axios({
-                url: routes.user.edit_profile,
+                url: endpoints.user.edit_profile,
                 method: 'post',
                 data: {
                     name,

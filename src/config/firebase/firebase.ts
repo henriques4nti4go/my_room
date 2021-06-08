@@ -1,14 +1,31 @@
-import firebase from 'firebase';
+import firebase  from 'firebase';
 
-if (!firebase.apps.length) {
-    firebase.initializeApp({
-        apiKey: "AIzaSyDGqTSTi5FVyQXwV4veb7oSP9wJkt9uS5s",
-        authDomain: "myroom-40298.firebaseapp.com",
-        projectId: "myroom-40298",
-        storageBucket: "myroom-40298.appspot.com",
-        messagingSenderId: "129755680255",
-        appId: "1:129755680255:web:7be3af25740968c605abca"
-      });
+class Firebase {
+    private objFirebase = firebase;
+    constructor(){
+        this.createIfNotExists();
+    }
+
+    private createIfNotExists(){
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+              apiKey: "AIzaSyCSDNVBXuC34eXU27RMP531a17mpuLGUmU",
+              authDomain: "my-room-master.firebaseapp.com",
+              projectId: "my-room-master",
+              storageBucket: "my-room-master.appspot.com",
+              messagingSenderId: "772665615535",
+              appId: "1:772665615535:web:eaad760ef928dd9b5de05a",
+              measurementId: "G-TNM3WYN7K9"
+            });
+        }
+    }
+
+    public getObjFirebase(){
+        return this.objFirebase;
+    }
+
 }
 
-export default firebase;
+const firebaseObject = new Firebase().getObjFirebase();
+
+export default firebaseObject;

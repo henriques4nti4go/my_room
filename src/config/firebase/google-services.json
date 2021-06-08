@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "129755680255",
-    "project_id": "myroom-40298",
-    "storage_bucket": "myroom-40298.appspot.com"
+    "project_number": "772665615535",
+    "project_id": "my-room-master",
+    "storage_bucket": "my-room-master.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:129755680255:android:27338a523b35074a05abca",
+        "mobilesdk_app_id": "1:772665615535:android:d362877932a788a45de05a",
         "android_client_info": {
           "package_name": "com.phsa.myroom"
         }
       },
       "oauth_client": [
         {
-          "client_id": "129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com",
+          "client_id": "772665615535-81mdq3n6sug7tt1kdtn3n0s35cflcofd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBwv4W8zQRnjh1rlJs2B6SqKCOvt-QPq9k"
+          "current_key": "AIzaSyDyIbJp_umVPq8_qZ0unoEvepBhCMvr2hM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "129755680255-hjdnus0rotmndb3vng9tce2piq7ghob7.apps.googleusercontent.com",
+              "client_id": "772665615535-81mdq3n6sug7tt1kdtn3n0s35cflcofd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -26,6 +26,7 @@ module.exports = function(api) {
             _navigations: './src/navigations',
             _config: './src/config',
             _controllers:'./src/app/controllers',
+            _classes:'./src/app/classes',
           },
         },
       ],
