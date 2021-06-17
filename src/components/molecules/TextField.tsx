@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Text, View, StyleSheet,TextInput } from 'react-native';
-
+import {GRAY} from '_config/colors';
 interface componentNameProps {
-    onChangeText:any
+    onChangeText:any;
+    value:String;
 }
 
 const componentName = (props: componentNameProps) => {
@@ -17,10 +18,11 @@ const componentName = (props: componentNameProps) => {
             minHeight: 40,
             maxHeight:100,
             paddingVertical:2,
-            paddingHorizontal:5
+            paddingHorizontal:5,
+            borderColor: GRAY
         }}
         >
-            <TextInput onChangeText={props.onChangeText} multiline={true}/>
+            <TextInput value={props.value} onChangeText={props.onChangeText} multiline={true}/>
         </View>
     </View>
   );

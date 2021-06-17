@@ -15,7 +15,7 @@ import axios from 'axios';
 import { endpoints } from '_config/endpoints';
 import Card from '_components/organisms/Card';
 import ActivityIndicator  from '_components/ActivityIndicator';
-
+import CardsRoom from '_components/CardsRoom';
 
 
 let data = new Data(5).returnData();
@@ -84,15 +84,7 @@ const Index = (props: componentNameProps) => {
       style.container,
     ]}
     >
-      { rooms!= null 
-      && rooms.length > 0
-      &&
-      <FlatList 
-      data={rooms}
-      keyExtractor={(item,id) => String(id)}
-      renderItem={({item}) => <Card><RoomContent {...item} /></Card>}
-      />
-      }
+      <CardsRoom navigation={props.navigation} data={rooms} />
     </View>
   );
   return (

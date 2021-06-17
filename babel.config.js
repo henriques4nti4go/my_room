@@ -27,6 +27,7 @@ module.exports = function(api) {
             _config: './src/config',
             _controllers:'./src/app/controllers',
             _classes:'./src/app/classes',
+            _utils:'./src/src/utils',
           },
         },
       ],

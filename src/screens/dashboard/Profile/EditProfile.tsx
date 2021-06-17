@@ -18,21 +18,26 @@ import {
 import axios from 'axios';
 import {endpoints} from '_config/endpoints';
 import { colors } from '_styles/index';
+import { useIsFocused } from '@react-navigation/native';
 
 interface componentNameProps {
   profile_user: object,
   navigation: any,
   user_access_token:string,
   update_profile_user:Function
+  user_id: string
 }
 
 const Index = (props: componentNameProps) => {
     let profile:any = props.profile_user;
-
+    const isFocused = useIsFocused();
     const [loading,setLoading]  =   React.useState(false);
     const [name,setName]        =   React.useState(profile.name);
     const [bio,setBio]          =   React.useState(profile.bio);
     
+    React.useEffect(() => {
+        
+    },[isFocused])
 
     async function update_profile() {
         setLoading(true);
@@ -42,7 +47,7 @@ const Index = (props: componentNameProps) => {
                 method: 'post',
                 data: {
                     name,
-                    bio
+                    bio,
                 },
                 headers: {
                     'token': props.user_access_token
@@ -128,6 +133,7 @@ const Index = (props: componentNameProps) => {
 const mapState = (state:any) => ({
   user_access_token: state.user.user_access_token,
   profile_user: state.profile_user,
+  user_id: state.user.user_id
 })
 
 const mapDispatchToProp = ( dispatch:any ) => {

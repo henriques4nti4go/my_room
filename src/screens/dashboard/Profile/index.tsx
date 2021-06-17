@@ -1,20 +1,26 @@
 import * as React from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet,Text} from 'react-native';
 import {connect} from 'react-redux';
 import ProfileImage from '_components/Profile/ProfileImage';
 import ProfileInformation from '_components/Profile/ProfileInformation';
 import ProfileEdit from '_components/Profile/ProfileEdit';
 import style from '../../../styles/style';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import RoundImage from '_components/Images/RoundImage';
+import Divider from '_components/Divider';
 
 interface componentNameProps {
-  profile_user: object,
+  profile_user: any,
   navigation: any
 }
 
 const Index = (props: componentNameProps) => {
-  let profile_user = props.profile_user;
-  
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      
+    });
+
+    return unsubscribe;
+  },[props.navigation])
   return (
     <View style={[
       style.body,
@@ -44,10 +50,10 @@ const Index = (props: componentNameProps) => {
           }}          
           />
         </View>
-        <ProfileImage {...profile_user} />
-        <ProfileInformation {...profile_user}/>
+        <RoundImage source={{uri: props.profile_user.profile_photo}} />
+        <ProfileInformation {...props.profile_user}/>
       </View>
-      
+      {/* <Divider /> */}
       <View
       style={[
       ]}

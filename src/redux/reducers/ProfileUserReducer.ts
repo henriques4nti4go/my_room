@@ -24,6 +24,7 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
     
     switch (action.type) {
         case 'USER_ACCESS_TOKEN':
+
             state.user_access_token  =  action.payload.user_access_token;
             break;
         case 'SET_PROFILE_USER_INFORMATION':
@@ -34,6 +35,7 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
             state.bio               =   action.payload.bio
             break;
         case 'UPDATE_PROFILE_USER':
+            console.log('atualizando perfil')
             state.name              =   action.payload.name;
             state.bio               =   action.payload.bio
             break;
