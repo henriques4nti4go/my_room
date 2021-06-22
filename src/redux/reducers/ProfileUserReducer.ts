@@ -35,9 +35,11 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
             state.bio               =   action.payload.bio
             break;
         case 'UPDATE_PROFILE_USER':
-            console.log('atualizando perfil')
             state.name              =   action.payload.name;
             state.bio               =   action.payload.bio
+            break;
+        case 'UPDATE_USER_NAME':
+            state.user_name         =   action.payload.user_name;
             break;
     }
     return state;

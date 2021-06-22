@@ -19,21 +19,23 @@ import axios from 'axios';
 import {endpoints} from '_config/endpoints';
 import { colors } from '_styles/index';
 import { useIsFocused } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface componentNameProps {
-  profile_user: object,
-  navigation: any,
-  user_access_token:string,
-  update_profile_user:Function
+  profile_user: any;
+  navigation: any;
+  user_access_token:string;
+  update_profile_user:Function;
+  update_user_name:Function;
   user_id: string
 }
 
 const Index = (props: componentNameProps) => {
-    let profile:any = props.profile_user;
     const isFocused = useIsFocused();
-    const [loading,setLoading]  =   React.useState(false);
-    const [name,setName]        =   React.useState(profile.name);
-    const [bio,setBio]          =   React.useState(profile.bio);
+    const [loading,setLoading]              =   React.useState(false);
+    const [name,setName]                    =   React.useState(props.profile_user.name);
+    const [bio,setBio]                      =   React.useState(props.profile_user.bio);
+    const [userName,setUserName]            =   React.useState(props.profile_user.user_name);
     
     React.useEffect(() => {
         
@@ -62,6 +64,31 @@ const Index = (props: componentNameProps) => {
             }
         } catch (error) {
             // console.log(error)
+        }
+        setLoading(false);
+    }
+
+    async function updateUserName() {
+        setLoading(true);
+        try {
+            let {data}:any = await axios({
+                url: endpoints.user.update_user_name,
+                method: 'post',
+                data: {
+                    user_name:userName
+                },
+                headers: {
+                    'token': props.user_access_token
+                }
+            });
+            console.log(data)
+            if (!data.error) {
+                props.update_user_name({
+                    user_name:userName
+                });
+            }
+        } catch (error) {
+            console.log(error)
         }
         setLoading(false);
     }
@@ -116,6 +143,29 @@ const Index = (props: componentNameProps) => {
                 style.mb1
             ]}
             >
+                <TextInput
+                mode='outlined'
+                label='Nome de usuario'
+                placeholder='Digite seu nome de usuario'
+                value={userName}
+                multiline={true}
+                maxLength={150}
+                theme={{
+                    colors:{primary:colors.PRIMARY}
+                }}
+                onChangeText={(text) => setUserName(text) }
+                />
+                <TouchableOpacity
+                onPress={() => updateUserName()}
+                >
+                    <Text>Atualizar nome de usuari</Text>
+                </TouchableOpacity>
+            </View>
+            <View
+            style={[
+                style.mb1
+            ]}
+            >
             <Button mode="contained"
             loading={loading}
             disabled={loading}
@@ -138,10 +188,14 @@ const mapState = (state:any) => ({
 
 const mapDispatchToProp = ( dispatch:any ) => {
     return{
-      update_profile_user: (value: object) => { dispatch({
-          payload: value,
-          type: 'UPDATE_PROFILE_USER',
-      })}
+        update_profile_user: (value: object) => { dispatch({
+            payload: value,
+            type: 'UPDATE_PROFILE_USER',
+        })},
+        update_user_name: (value: object) => { dispatch({
+            payload: value,
+            type: 'UPDATE_USER_NAME',
+        })},
     }
 }
 

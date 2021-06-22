@@ -7,6 +7,7 @@ import { endpoints } from '_config/endpoints';
 import { style } from '_styles/';
 import {PRIMARY,GRAY,FONT_COLOR} from '_config/colors';
 import { ProcessDate } from '../../../utils';
+import WebSocketClass from '../../../classes/WebSocket.class';
 interface RoomMessagesProps {
   navigation:any;
   user_access_token:string;
@@ -18,15 +19,30 @@ const Index = (props: RoomMessagesProps) => {
   const [messagesRoom,setMessagesRoom] = React.useState(null);
   const [messageText,setMessageText] = React.useState('');
   const [loading,setLoading] = React.useState(true);
+  const [client,setClient] = React.useState();
 
   React.useEffect(() => {
-    getMessages();
+    connectWebSocket();
   },[]);
+
+  React.useEffect(
+    () => props.navigation.addListener('blur', () => closeConnectionWebsocket()),
+    []
+  );
+
+  function closeConnectionWebsocket() {
+    console.log(da())
+  }
+
+  function da() {
+    return client;
+  }
 
   function CardMessage(propsInternal:any) {
   
     const [messages] = React.useState(propsInternal.data);
     const [profile_photo,setProfilePhoto]  = React.useState(propsInternal.data.profile_photo);
+    
     const [isUserMessage] = React.useState(messages.user_id  == props.user.user_id);
     const date = new ProcessDate();
     return (
@@ -76,22 +92,53 @@ const Index = (props: RoomMessagesProps) => {
     if (!data.response.error) setMessagesRoom(data.response.messages.reverse())
   }
 
+  async function connectWebSocket() {
+    setLoading(true);
+    await getMessages();
+    let params = {
+      user_id:props.user.user_id,
+      token: props.user_access_token,
+      room_id:props.room_selected,
+      action:"CONNECTED"
+    };
+
+    const client_ws = new WebSocketClass(params);
+
+    let ws:any = await client_ws.connectToSever();
+    setClient(ws);
+    console.log(ws)
+    ws.onmessage = (response:any) =>{
+      console.log(props.user.user_id)
+      setMessagesRoom(JSON.parse(response.data).response.messages.reverse());
+    }
+
+  }
+
   async function sendMessage() {
     try {
-      let {data} = await axios({
-        url: endpoints.user.messages.send_message_room,
-        method: 'POST',
-        headers: {
-          'token': props.user_access_token,
-        },
-        data: {
-          room_id: props.room_selected,
-          user_id: props.user.user_id,
-          message: messageText
-        }
-      });
+      // let {data} = await axios({
+      //   url: endpoints.user.messages.send_message_room,
+      //   method: 'POST',
+      //   headers: {
+      //     'token': props.user_access_token,
+      //   },
+      //   data: {
+      //     room_id: props.room_selected,
+      //     user_id: props.user.user_id,
+      //     message: messageText
+      //   }
+      // });
+      let ws:any = client;
+      
+      ws.send(JSON.stringify({
+        room_id: props.room_selected,
+        user_id: props.user.user_id,
+        message: messageText,
+        token:props.user_access_token,
+      }));
+
       setMessageText('');
-      await getMessages();
+      // await getMessages();
     } catch (error:any) {
       // console.log(error.data.reponse)
     }
