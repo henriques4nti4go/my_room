@@ -3,11 +3,13 @@ import * as React from 'react';
 import { Text, View, StyleSheet, ScrollView,FlatList,TextInput, TouchableOpacity , Image} from 'react-native';
 import {connect} from 'react-redux';
 import SendMessageBar from '_components/molecules/SendMessageBar';
+import ActivityIndicator from '_components/ActivityIndicator'
 import { endpoints } from '_config/endpoints';
 import { style } from '_styles/';
 import {PRIMARY,GRAY,FONT_COLOR} from '_config/colors';
 import { ProcessDate } from '../../../utils';
 import WebSocketClass from '../../../classes/WebSocket.class';
+import { cos } from 'react-native-reanimated';
 interface RoomMessagesProps {
   navigation:any;
   user_access_token:string;
@@ -15,28 +17,32 @@ interface RoomMessagesProps {
   user:any
 }
 
+const initialState = {ws:null};
+
+function reducer(state:any, action:any) {
+  state.ws = action.payload; 
+  return state;
+}
+
 const Index = (props: RoomMessagesProps) => {
   const [messagesRoom,setMessagesRoom] = React.useState(null);
   const [messageText,setMessageText] = React.useState('');
   const [loading,setLoading] = React.useState(true);
-  const [client,setClient] = React.useState();
+  const [client,setClient] = React.useState(null);
+  const [state,dispatch] = React.useReducer(reducer, initialState);
 
   React.useEffect(() => {
     connectWebSocket();
   },[]);
 
-  React.useEffect(
-    () => props.navigation.addListener('blur', () => closeConnectionWebsocket()),
-    []
-  );
+  React.useEffect(() => {
+    
+    const unsubscribe = props.navigation.addListener('blur', () => {
+      // state.ws.close();
+    });
 
-  function closeConnectionWebsocket() {
-    console.log(da())
-  }
-
-  function da() {
-    return client;
-  }
+    return unsubscribe;
+  }, [props.navigation]);
 
   function CardMessage(propsInternal:any) {
   
@@ -95,20 +101,15 @@ const Index = (props: RoomMessagesProps) => {
   async function connectWebSocket() {
     setLoading(true);
     await getMessages();
-    let params = {
-      user_id:props.user.user_id,
-      token: props.user_access_token,
-      room_id:props.room_selected,
-      action:"CONNECTED"
-    };
 
-    const client_ws = new WebSocketClass(params);
-
-    let ws:any = await client_ws.connectToSever();
-    setClient(ws);
-    console.log(ws)
-    ws.onmessage = (response:any) =>{
-      console.log(props.user.user_id)
+    let ws:any = await new WebSocketClass(props.user.user_id,props.room_selected,props.user_access_token).connectToSever();
+    
+    dispatch({
+      payload:ws,
+    });
+    
+    setLoading(false)
+    state.ws.onmessage = (response:any) =>{
       setMessagesRoom(JSON.parse(response.data).response.messages.reverse());
     }
 
@@ -116,34 +117,14 @@ const Index = (props: RoomMessagesProps) => {
 
   async function sendMessage() {
     try {
-      // let {data} = await axios({
-      //   url: endpoints.user.messages.send_message_room,
-      //   method: 'POST',
-      //   headers: {
-      //     'token': props.user_access_token,
-      //   },
-      //   data: {
-      //     room_id: props.room_selected,
-      //     user_id: props.user.user_id,
-      //     message: messageText
-      //   }
-      // });
-      let ws:any = client;
-      
-      ws.send(JSON.stringify({
-        room_id: props.room_selected,
-        user_id: props.user.user_id,
-        message: messageText,
-        token:props.user_access_token,
-      }));
-
+      state.ws.send(messageText);
       setMessageText('');
       // await getMessages();
     } catch (error:any) {
       // console.log(error.data.reponse)
     }
   }
-  
+  if (loading) return <ActivityIndicator />
   return (
     <View style={[style.container]}>
       <FlatList 

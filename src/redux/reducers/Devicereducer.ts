@@ -2,15 +2,16 @@ const initialState:{
     device_theme:string,
     saveInformations:boolean
 } = {
-    device_theme: 'default',
+    device_theme: '',
     saveInformations:false,
 }
 
-const Reducer = (state:any = initialState, action:any) => {
+const Reducer = (state = initialState, action:any) => {
     
     switch (action.type) {
-        case 'USER_TOKEN':
-            
+        case 'APP_THEME':
+            console.log(action)
+            state.device_theme = action.payload.theme;
             break;
     
         default:

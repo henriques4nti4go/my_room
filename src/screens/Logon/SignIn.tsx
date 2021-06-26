@@ -23,9 +23,10 @@ WebBrowser.maybeCompleteAuthSession();
 
 interface componentNameProps {
     navigation: any;
-    setTokenAccess:Function;
-    setUserId:Function,
-    setInfoProfileUser:Function,
+    setTokenAccess: Function;
+    setUserId: Function;
+    setInfoProfileUser: Function;
+    setAppTheme: Function;
 }
 
 
@@ -133,7 +134,9 @@ function Index(props:componentNameProps) {
                 let {
                     url,
                 } = response_data_user.response.profile_photo;
-                console.log(response_data_user)
+                const {
+                    theme
+                } = response_data_user.response.appTheme; 
                 props.setTokenAccess(response_data_user.response.token_jwt);
                 props.setUserId({user_id});
                 props.setInfoProfileUser({
@@ -143,6 +146,7 @@ function Index(props:componentNameProps) {
                     profile_photo: url,
                     bio
                 });
+                props.setAppTheme(theme)
                 props.navigation.navigate('Home');
             }
 
@@ -230,20 +234,24 @@ const mapStateToProps = (state:any) => {
 
 const mapDispatchToProp = ( dispatch:any ) => {
     return{
-      setTokenAccess: (value:string) =>{ dispatch({
-          payload:{
-              user_access_token:value
-          },
-          type:'USER_ACCESS_TOKEN'
-      })},
-      setUserId: (value:object) => { dispatch({
-          payload: value,
-          type: 'USER_ID'
-      })},
-      setInfoProfileUser: (value: object) => { dispatch({
-          payload: value,
-          type: 'SET_PROFILE_USER_INFORMATION',
-      })}
+        setTokenAccess: (value:string) =>{ dispatch({
+            payload:{
+                user_access_token:value
+            },
+            type:'USER_ACCESS_TOKEN'
+        })},
+        setUserId: (value:object) => { dispatch({
+            payload: value,
+            type: 'USER_ID'
+        })},
+        setInfoProfileUser: (value: object) => { dispatch({
+            payload: value,
+            type: 'SET_PROFILE_USER_INFORMATION',
+        })},
+        setAppTheme: (value: object) => { dispatch({
+            payload: value,
+            type: 'APP_THEME',
+        })}
     }
 }
 
