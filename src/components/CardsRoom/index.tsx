@@ -4,41 +4,69 @@ import Card from '_components/Cards';
 import { connect } from 'react-redux';
 import Divider  from '_components/Divider';
 import {FONT_COLOR} from '_config/colors';
+import { Icon } from 'react-native-elements';
 interface Props {
     data?:any;
     navigation?:any;
     setRoomSelected:any;
+    colors_theme: any;
 }
 interface RoomProps {
     roomDetails:any;
 }
 
-function RoomContent(props:RoomProps) {
-    const roomDetails = props.roomDetails;
-    return (
-        <Card>
-            <View>
-                <Text
-                style={{fontWeight:'bold',fontSize:35,color:FONT_COLOR.PRIMARY}}
-                >
-                    {roomDetails.title}
-                </Text>
-                <Divider />    
-            </View>
-        </Card>
-    );
-}
 
 const Index = (props:Props) =>{
-    const rooms = props.data;
-    console.log(props)
+    
+    function RoomContent(item:RoomProps) {
+        return (
+            <View
+            style={{
+                borderWidth:3,
+                marginTop:10,
+                borderRadius:5,
+                paddingLeft:10,
+                backgroundColor: props.colors_theme.SECONDARY,
+                borderColor: props.colors_theme.PRIMARY
+            }}
+            >
+                <View style={{paddingVertical: 10}}>
+                    <View style={{flexDirection:'row'}}>
+                        <View style={{
+                            borderRadius:200,
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+                            elevation: 5,
+                            backgroundColor: 'white',
+                            paddingVertical:10,
+                            paddingHorizontal:10
+                            }}>
+                            <Icon size={30} type='font-awesome-5' name='door-open' />
+                        </View>
+                        <View style={{marginLeft:10}}>
+                            <Text
+                            style={{fontWeight:'bold',fontSize:17,color:props.colors_theme.PRIMARY}}
+                            >
+                                {item.roomDetails.title}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        );
+    }
     return (
         <View>
-            { rooms!= null 
-            && rooms.length > 0
+            { props.data!= null 
+            && props.data.length > 0
             &&
             <FlatList 
-            data={rooms}
+            data={props.data}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item,id) => String(id)}
             renderItem={({item}) => {
@@ -60,6 +88,7 @@ const Index = (props:Props) =>{
 const mapState = (state:any) => ({
     user_access_token: state.user.user_access_token,
     profile_user: state.profile_user,
+    colors_theme: state.device.colors_theme
   })
   
   const mapDispatch = (dispatch:any) => {

@@ -3,61 +3,75 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, Button  } from 'react-
 import {
     Icon,
 } from 'react-native-elements';
-import {
-    Divider,
-    Button as ButtonPaper,
-    Switch
-} from 'react-native-paper';
 import ProfileImage from '_components/Profile/ProfileImage';
 import ProfileInformation from '_components/Profile/ProfileInformation';
 import { connect } from 'react-redux';
-import {colors} from '_styles/index';
+import {colors,style} from '_styles/index';
 import firebase from 'firebase';
 
 interface componentNameProps {}
 interface menuElementsRoute {
     key:string;
     name:string;
+    colors_theme:any
 }
 
-const componentName = ({navigation,state,profile_user}:any) => {
-    
-    let {
-        name,
-        user_name,
-    } = profile_user;
+const TabBar = (props:any) => {
+    const { navigationState, navigation, position,state } = props
     
     return (
-        <View style={styles.container}>
-            <View
-            style={{
-                backgroundColor: '#d6d6d6',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex:4
-            }}
+      <View style={[
+        {
+            height: 55,
+            backgroundColor: props.colors_theme.SECONDARY,
+            flexDirection: "row",
+            justifyContent: 'space-around',
+            alignItems: 'center',
+        },
+        style.shadowBox
+      ]}>
+      {state.routes.map((route:any, index:any) => {
+        let iconName = 'home';
+        let typeIcon;
+        switch (route.name) {
+            case 'Home':
+                iconName = 'home';
+                typeIcon = 'font-awesome-5';
+                break;
+            case 'Room':
+                iconName = 'door-open';
+                typeIcon = 'font-awesome-5';
+                break;
+            case 'Profile':
+                iconName = 'user';
+                typeIcon = 'font-awesome';
+                break;
+            case 'Configurations':
+                iconName = 'cog';
+                typeIcon = 'font-awesome-5';
+                break;   
+            case 'CreateRoom':
+                iconName = 'plus';
+                typeIcon = 'font-awesome-5';
+                break;     
+            default:
+                break;
+        } 
+
+        return (
+            <TouchableOpacity
+            key={index}
+            onPress={() => navigation.navigate(route.name)}
             >
-                <ProfileImage {...profile_user} />
-                <ProfileInformation {...profile_user}/>
-            </View>
-            <View
-            style={{flex:6}}
-            >
-                <MenuOptions {...{navigation,state}} />
-            </View>
-            <View
-            style={{
-                flex: 1
-            }}
-            >
-                {/* <Switch value={true}  /> */}
-                
-            </View>
-            <View
-            style={{flex:2}}
-            >
-                <Divider />
-                <ButtonPaper
+                <Icon name={iconName} type={typeIcon} color={props.colors_theme.PRIMARY} />
+            </TouchableOpacity>
+        )
+      })}
+      </View>
+    )
+  }
+
+{/* <ButtonPaper
                 color={colors.PRIMARY} 
                 mode='text' 
                 onPress={() => {
@@ -67,12 +81,7 @@ const componentName = ({navigation,state,profile_user}:any) => {
                 }}
                 icon={require('_assets/icons/logout.png')} 
                 contentStyle={{justifyContent:'flex-start'}}
-                >Sair</ButtonPaper>
-            </View>
-        </View>
-    );
-};
-
+                >Sair</ButtonPaper> */}
 
 
 function MenuOptions({navigation,state}:any) {
@@ -109,12 +118,13 @@ function MenuOptions({navigation,state}:any) {
 
 const mapState = (state:any) => ({
     profile_user: state.profile_user,
+    colors_theme: state.device.colors_theme
   })
   
   const mapDispatch = {
   }
   
-export default connect(mapState,mapDispatch)(componentName);
+export default connect(mapState,mapDispatch)(TabBar);
 
 
 const styles = StyleSheet.create({

@@ -1,32 +1,35 @@
 import * as React from 'react';
 import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
-
 import SignIn from '_screens/Logon/SignIn';
 import Home from '_screens/dashboard/Home';
 import Room from '_screens/dashboard/Room/Index';
 import Profile from '_screens/dashboard/Profile/index';
+import CreateRoom from '_screens/dashboard/Room/CreateRoom';
 import UserInformationRegistration from '_screens/Logon/UserInformationRegistration';
 import EditProfile from '_screens/dashboard/Profile/EditProfile';
 import Configurations from '_screens/dashboard/Configurations/index';
 import { createStackNavigator } from '@react-navigation/stack';
-import MyDrawerBar from '_components/MyDrawerBar';
+import MyTabBar from '_components/MyDrawerBar';
 import MessagesRoom from '_screens/dashboard/Room/Messages';
 
 
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 
-function DrawerNav() {
+function TabNav() {
   return (
-      <Drawer.Navigator initialRouteName="Home" drawerContent={(props) => <MyDrawerBar {...props} />}>
-        <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Room" component={Room} />
-        <Drawer.Screen name="Profile" component={Profile} />
-        <Drawer.Screen name="Configurations" component={Configurations} />
-      </Drawer.Navigator>
+      <Tab.Navigator 
+      initialRouteName="Home" 
+      tabBar={(props) => <MyTabBar {...props} />}>
+        <Tab.Screen name="Home" component={Home} />
+        {/* <Tab.Screen name="Room" component={Room} /> */}
+        <Tab.Screen name="CreateRoom" component={CreateRoom} />
+        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Configurations" component={Configurations} />
+      </Tab.Navigator>
   );
 }
 
@@ -36,7 +39,7 @@ function App() {
             <Stack.Screen options={{headerShown: false}} name="SignIn" component={SignIn} />
             <Stack.Screen options={{headerShown: false}} name="Room" component={Room} />
             <Stack.Screen options={{headerShown: false}} name="MessagesRoom" component={MessagesRoom} />
-            <Stack.Screen options={{headerShown: false}} name="Home" component={DrawerNav} />
+            <Stack.Screen options={{headerShown: false}} name="Home" component={TabNav} />
             <Stack.Screen options={{headerShown: false}} name="UserInformationRegistration" component={UserInformationRegistration} />
             <Stack.Screen options={{headerShown: false}} name="EditProfile" component={EditProfile} />
         </Stack.Navigator>

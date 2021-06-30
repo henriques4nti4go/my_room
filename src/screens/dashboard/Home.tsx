@@ -1,7 +1,7 @@
 import * as React  from 'react';
 import { Text, View,StyleSheet,FlatList, TouchableOpacity, } from 'react-native';
 import { AirbnbRating } from "react-native-elements";
-import {style} from '_styles/index';
+import {style} from '_styles/';
 import {
   Title,
   Paragraph,
@@ -10,51 +10,35 @@ import {
 } from 'react-native-paper';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import Data from '../../test/GenerateData';
 import axios from 'axios';
 import { endpoints } from '_config/endpoints';
 import Card from '_components/organisms/Card';
 import ActivityIndicator  from '_components/ActivityIndicator';
 import CardsRoom from '_components/CardsRoom';
-
-
-let data = new Data(5).returnData();
-
+import {colors} from '_styles/'
+import Container from '_components/Container';
 interface componentNameProps {
   navigation:any;
   user_access_token:string;
-  setRoomSelected:Function
+  setRoomSelected:Function;
+  device_theme: string;
+  colors_theme: any
 }
 
 
 const Index = (props: componentNameProps) => {
   const [rooms,setRooms] = React.useState([]);
   const [loading,setIsLoading] = React.useState(true);
+  const {
+    PRIMARY,
+    SECONDARY,
+    FONT_COLOR,
+    BACKGROUND_VIEW
+  } = colors(props.device_theme);
+
   React.useEffect(() => {
     getRooms();
   },[]);
-
-  function RoomContent(item:any) {
-    return (
-      <TouchableOpacity
-      onPress={() => {
-        props.setRoomSelected(item.id)
-        props.navigation.navigate('MessagesRoom')
-      }}
-      style={{minHeight:150}}
-      >
-        <View>
-          <Text style={{fontSize:30}}>
-            {item.roomDetails.title}
-          </Text>
-        </View>
-        <View style={{justifyContent: 'space-between',flexDirection: 'row'}}>
-          <Text>pessoas</Text>
-          <Text>5,1</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
 
   async function getRooms() {
     
@@ -76,79 +60,37 @@ const Index = (props: componentNameProps) => {
   }
 
   if (loading) return <ActivityIndicator />
+  
+  return (
+    <Container {...props}>
+      <View style={{
+        backgroundColor: props.colors_theme.SECONDARY,
+        paddingHorizontal:10,
+        paddingVertical:10,
+        marginTop:10,
+        borderRadius:5,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
 
-  return (
-    <View
-    style={[
-      style.body,
-      style.container,
-    ]}
-    >
+        elevation: 5,
+        }}>
+        <Text style={{color:props.colors_theme.FONT_COLOR}}>Encontre uma sala que mais <Text style={{color:props.colors_theme.PRIMARY,fontWeight:'bold'}}>combina</Text> com você</Text>
+      </View>
       <CardsRoom navigation={props.navigation} data={rooms} />
-    </View>
-  );
-  return (
-    <View style={[
-        style.container,
-        style.body
-    ]}>
-      <View>
-        <Button onPress={() => firebase.auth().signOut()}>sair</Button>
-      </View>
-      <View style={[
-        style.align,
-      ]}>
-        <FlatList
-          style={[
-            {
-              width: '100%',
-            }
-          ]}
-          keyExtractor={(item,index) => index.toString()}
-          data={data}
-          renderItem={({item}) => {
-            
-            return (
-              <TouchableOpacity
-              onPress={() => props.navigation.navigate('Room')}
-              >
-                <Card style={[
-                  style.width,
-                  {
-                    alignSelf: 'center',
-                    marginBottom: 20,
-                  }
-                ]}>
-                  <Card.Title title={item.name} subtitle="Card Subtitle" />
-                  <Card.Content>
-                    <Title>😀</Title>
-                    <Paragraph>Card content</Paragraph>
-                  </Card.Content>
-                  {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-                  <Card.Actions>
-                    <Button>Entrar</Button>
-                    {/* <Button>Cancel</Button> */}
-                    
-                    <AirbnbRating
-                      count={5}
-                      reviews={[1,2,3,4,5]}
-                      defaultRating={1}
-                      size={20}
-                    />
-                  </Card.Actions>
-                </Card>
-              </TouchableOpacity>
-            );
-          }}
-          />
-      </View>
-    </View>
+    </Container>
   );
 };
 
 const mapState = (state:any) => ({
   user_access_token: state.user.user_access_token,
   profile_user: state.profile_user,
+  device_theme: state.device.device_theme,
+  colors_theme: state.device.colors_theme
 })
 
 const mapDispatch = (dispatch:any) => {

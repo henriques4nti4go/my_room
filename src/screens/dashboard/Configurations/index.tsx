@@ -5,10 +5,16 @@ import {
   Title,
   TextInput
 } from 'react-native-paper';
+import { Switch, TouchableOpacity } from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
 
-interface componentNameProps {}
+interface componentNameProps {
+  setAppTheme:Function;
+  navigation:any
+}
 
 const componentName = (props: componentNameProps) => {
+  const [switch_value,setSwitchValue] = React.useState(false);
   
   return (
     <View style={[
@@ -33,11 +39,47 @@ const componentName = (props: componentNameProps) => {
       >
         <TextInput placeholder={'nome de usuario'} />
       </View>
+      <Switch
+      onValueChange={() => {
+        props.setAppTheme(switch_value? 'dark' : 'default')
+        setSwitchValue(!switch_value)
+      }}
+      value={switch_value}
+      ></Switch>
+      <TouchableOpacity
+      onPress={() => props.navigation.navigate('Home') }
+      >
+        <Text>
+          go home
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 };
 
-export default componentName;
+const mapState = (state:any) => ({
+  user_access_token: state.user.user_access_token,
+  profile_user: state.profile_user,
+  device_theme: state.device.device_theme,
+  colors_theme: state.device.colors_theme
+})
+
+const mapDispatch = (dispatch:any) => {
+  return {
+    setRoomSelected: (value:string) =>{ dispatch({
+      payload:{
+          room_selected:value
+      },
+      type:'ROOM_SELECTED'
+    })},
+    setAppTheme: (value: object) => { dispatch({
+      payload: value,
+      type: 'APP_THEME',
+  })}
+  }
+}
+
+export default connect(mapState,mapDispatch)(componentName);
 
 const styles = StyleSheet.create({
   container: {flex:1,justifyContent: 'center',alignItems: 'center'}

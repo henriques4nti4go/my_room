@@ -1,6 +1,4 @@
-import * as colors from './colors';
+import {colors} from './colors';
 import style from './style';
-export {
-    colors,
-    style,
-};
+
+export {style,colors};
