@@ -18,10 +18,9 @@ interface CardMessageProps {
 }
 
 function Index(props:CardMessageProps) {
-    // const [messages] = React.useState(propsInternal.data);
-    // const [profile_photo,setProfilePhoto]  = React.useState(propsInternal.data.profile_photo);
-    
-    const [isUserMessage] = React.useState(props.user_id  == props.user.user_id);
+
+    const isUserMessage = Number(props.user_id) === Number(props.user.user_id);
+
     const date = new ProcessDate();
     return (
         <View style={{flexDirection:'row',marginVertical:5,marginHorizontal:5}}>
@@ -58,7 +57,8 @@ function Index(props:CardMessageProps) {
                     marginBottom:2
                 }}
                 >
-                {props.message}
+                    {props.message}
+                {/* {`${props.user.user_id} == ${props.user_id} ${isUserMessage}`} */}
                 </Text>
                 <Text style={{color:props.colors_theme.FONT_COLOR,fontSize:10}}>{date.dateWithPattern(props.created_at)}</Text>
             </View>

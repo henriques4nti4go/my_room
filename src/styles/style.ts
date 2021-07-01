@@ -37,6 +37,10 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
 
         elevation: 5,
+    },
+    cardPadding:{
+        paddingHorizontal:10,
+        paddingVertical: 10
     }
 });
 export default styles;

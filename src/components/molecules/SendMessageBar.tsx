@@ -13,7 +13,7 @@ interface componentNameProps {
 }
 
 const componentName = (props: componentNameProps) => {
-  console.log(props)
+  
   return (
     <View 
         style={{

@@ -63,8 +63,10 @@ const Index = (props: RoomMessagesProps) => {
     setLoading(true);
     await getMessages();
 
+    console.log(
+      props.user.user_id,props.room_selected,props.user_access_token
+    );
     let ws:any = await new WebSocketClass(props.user.user_id,props.room_selected,props.user_access_token).connectToSever();
-    
     dispatch({
       payload:ws,
     });

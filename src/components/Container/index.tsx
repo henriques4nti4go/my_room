@@ -15,7 +15,7 @@ interface IColors {
     FONT_COLOR: string;
 }
 
-const Container = (props:ContainerProps) => { console.log(props)
+const Container = (props:ContainerProps) => { 
     return (
         <View style={[
             style.body,

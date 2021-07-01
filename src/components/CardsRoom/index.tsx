@@ -54,6 +54,7 @@ const Index = (props:Props) =>{
                             >
                                 {item.roomDetails.title}
                             </Text>
+                            <Text style={{color:props.colors_theme.FONT_COLOR}}>{item.roomDetails.description}</Text>
                         </View>
                     </View>
                 </View>

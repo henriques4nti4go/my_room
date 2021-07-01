@@ -1,59 +1,46 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet,TouchableOpacity } from 'react-native';
 import style from '../../../styles/style';
-import {
-  Title,
-  TextInput
-} from 'react-native-paper';
-import { Switch, TouchableOpacity } from 'react-native-gesture-handler';
+import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
+import Container from '_components/Container';
+import firebase from 'firebase';
 
 interface componentNameProps {
   setAppTheme:Function;
-  navigation:any
+  navigation:any;
+  colors_theme: any;
 }
 
 const componentName = (props: componentNameProps) => {
   const [switch_value,setSwitchValue] = React.useState(false);
   
   return (
-    <View style={[
-      style.body,
-      {
-        alignItems: 'center'
-      }
-    ]}>
+    <Container>
       <View
       style={[
-        style.width,
+        {
+          backgroundColor: props.colors_theme.SECONDARY,
+          marginTop:10,
+          borderRadius:5
+        },
+        style.cardPadding
       ]}
       >
-        <Title>Perfil</Title>
-        
+        <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => props.navigation.navigate('EditProfile')}>
+          <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='user' />
+          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR}}>Editar Perfil</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => {
+          firebase.auth().signOut().then((res) => {
+            props.navigation.navigate('SignIn')
+          })
+        }}>
+          <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='sign-out-alt' />
+          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR}}>Logout</Text>
+        </TouchableOpacity>
       </View>
-      <View
-      style={[
-        style.mb1,
-        style.width,
-      ]}
-      >
-        <TextInput placeholder={'nome de usuario'} />
-      </View>
-      <Switch
-      onValueChange={() => {
-        props.setAppTheme(switch_value? 'dark' : 'default')
-        setSwitchValue(!switch_value)
-      }}
-      value={switch_value}
-      ></Switch>
-      <TouchableOpacity
-      onPress={() => props.navigation.navigate('Home') }
-      >
-        <Text>
-          go home
-        </Text>
-      </TouchableOpacity>
-    </View>
+    </Container>
   )
 };
 
