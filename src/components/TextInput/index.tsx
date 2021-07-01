@@ -15,11 +15,12 @@ interface IProps {
     onChangeText: Function;
     label: string;
     error: string;
+    editable: boolean;
 }
 
 function index(props:IProps) {
 
-    const [colorsBorder,setColorBorder] = React.useState(props.colors_theme.SECONDARY);
+    const [colorsBorder,setColorBorder] = React.useState(props.colors_theme.BORDER_COLOR);
     const [showError,setShowError] = React.useState(props.error ? true : false);
     const localStyle = StyleSheet.create({
         boderInput:{
@@ -33,7 +34,7 @@ function index(props:IProps) {
             borderRadius: 5
         },
         colorBorder:{
-            borderColor: colorsBorder
+            borderColor: colorsBorder,
         },
         flex: {
             flex:1
@@ -61,12 +62,13 @@ function index(props:IProps) {
                     <Icon size={20} color={colorsBorder}  name={props.nameIcon || 'user'} type={props.typeIcon || 'font-awesome-5'} />
                 </View>
                 <TextInput 
+                editable={props.editable}
                 multiline={props.multiline}
                 maxLength={props.maxLength}
                 value={props.value}
                 onChangeText={(text) => props.onChangeText(text)}
                 onFocus={() => setColorBorder(props.colors_theme.PRIMARY) }
-                onBlur={() => setColorBorder(props.colors_theme.SECONDARY) }
+                onBlur={() => setColorBorder(props.colors_theme.BORDER_COLOR) }
                 style={[
                     localStyle.flex
                 ]}

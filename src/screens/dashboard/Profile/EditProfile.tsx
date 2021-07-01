@@ -1,5 +1,5 @@
 import * as React  from 'react';
-import { View, StyleSheet,Text} from 'react-native';
+import { View, StyleSheet,Text, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import ProfileImage from '_components/Profile/ProfileImage';
 import ProfileInformation from '_components/Profile/ProfileInformation';
@@ -20,7 +20,8 @@ import {endpoints} from '_config/endpoints';
 import { colors } from '_styles/index';
 import { useIsFocused } from '@react-navigation/native';
 import Button from '_components/Button';
-
+import Container from '_components/Container';
+import {style as styles} from '_styles/';
 interface componentNameProps {
   profile_user: any;
   navigation: any;
@@ -28,7 +29,7 @@ interface componentNameProps {
   update_profile_user:Function;
   update_user_name:Function;
   user_id: string;
-  colors_theme: string;
+  colors_theme: any;
 }
 
 const Index = (props: componentNameProps) => {
@@ -62,9 +63,11 @@ const Index = (props: componentNameProps) => {
                     name,
                     bio,
                 });
+                Alert.alert('Sucesso!','As informações foram atualizadas');
             }
+
         } catch (error) {
-            // console.log(error)
+            Alert.alert('Erro!','Não foi possivel atualizar as informações');
         }
         setLoading(false);
     }
@@ -87,85 +90,87 @@ const Index = (props: componentNameProps) => {
                 props.update_user_name({
                     user_name:userName
                 });
+                Alert.alert('Sucesso!','O nome de usuario foi atualizado!');
             }
-        } catch (error) {
-            console.log(error)
+        } catch (error:any) {
+            Alert.alert('Error!',error.response.data.descriptionError);
         }
         setLoading(false);
     }
 
     return (
-        <View style={[
-        style.body,
-        style.width,
-        {
-            alignSelf: 'center'
-        }
-        ]}>
-            <Title>
-                Editar Perfil
-            </Title>
-            <View
-            style={[
-                style.mb1
-            ]}
-            >
-                <TextInput
-                label='nome'
-                placeholder='Digite seu nome'
-                value={name}
-                onChangeText={(text) => setName(text) }
-                />
+        <Container>
+            <View style={[{backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},styles.shadowBox]}>
+                <Text style={{fontWeight:'bold',fontSize:25}}>Editar Perfil</Text>
             </View>
-            <View
-            style={[
-                style.mb1
-            ]}
-            >
-                <TextInput
-                nameIcon='book'
-                placeholder='Digite sua bio'
-                value={bio}
-                multiline={true}
-                maxLength={150}
-                onChangeText={(text:string) => setBio(text) }
-                />
-            </View>
-            <View
-            style={{
-                flexDirection:'row'
-            }}
-            >
-                <View style={{flex:1}}>
+            <View style={[
+                {backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},
+                styles.shadowBox
+            ]}>
+                <View
+                style={[
+                    style.mb1
+                ]}
+                >
                     <TextInput
-                    nameIcon='user-tie'
-                    placeholder='Digite seu nome de usuario'
-                    value={userName}
-                    multiline={true}
-                    maxLength={150}
-                    onChangeText={(text) => setUserName(text) }
+                    editable={!loading}
+                    label='nome'
+                    placeholder='Digite seu nome'
+                    value={name}
+                    onChangeText={(text) => setName(text) }
                     />
                 </View>
-                <Button 
-                onPress={() => console.log('loading')}
-                loading={true}
-                >Enviar</Button>
+                <View
+                style={[
+                    style.mb1
+                ]}
+                >
+                    <TextInput
+                    editable={!loading}
+                    nameIcon='book'
+                    placeholder='Digite sua bio'
+                    value={bio}
+                    multiline={true}
+                    maxLength={150}
+                    onChangeText={(text:string) => setBio(text) }
+                    />
+                </View>
+                <View
+                style={{
+                    flexDirection:'row',
+                    marginBottom:10
+                }}
+                >
+                    <View style={{flex:1,marginRight:10}}>
+                        <TextInput
+                        editable={!loading}
+                        nameIcon='user-tie'
+                        placeholder='Digite seu nome de usuario'
+                        value={userName}
+                        multiline={true}
+                        maxLength={150}
+                        onChangeText={(text) => setUserName(text) }
+                        />
+                    </View>
+                    <Button 
+                    onPress={() => updateUserName()}
+                    >Enviar</Button>
+                </View>
+                <View
+                style={[
+                    style.mb1
+                ]}
+                >
+                    <Button
+                    loading={loading}
+                    onPress={() => update_profile()}>
+                        {
+                            !loading ? 'atualizar' : '' 
+                        }
+                    </Button>
+                </View>
             </View>
-            <View
-            style={[
-                style.mb1
-            ]}
-            >
-            <Button
-            loading={true}
-            
-            onPress={() => update_profile()}>
-                {
-                    !loading ? 'atualizar' : '' 
-                }
-            </Button>
-            </View>
-        </View>
+        </Container>
     );
 };
 
@@ -191,7 +196,3 @@ const mapDispatchToProp = ( dispatch:any ) => {
 
 export default connect(mapState,mapDispatchToProp)(Index);
 
-
-const styles = StyleSheet.create({
-  
-});

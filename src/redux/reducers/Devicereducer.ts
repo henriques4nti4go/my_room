@@ -11,15 +11,17 @@ interface IColors {
     BACKGROUND_VIEW: string;
     SECONDARY: string;
     FONT_COLOR: string;
+    BORDER_COLOR: string;
 }
 
 function colors(theme:string):IColors{ 
     if (theme === 'default') {
         return {
             PRIMARY: '#00B0A6',
-            BACKGROUND_VIEW:'#D8D8D8',
+            BACKGROUND_VIEW:'#DBDBDB',
             SECONDARY: 'white',
             FONT_COLOR: 'black',
+            BORDER_COLOR: '#C4C4C4'
         }
     }
     
@@ -29,14 +31,16 @@ function colors(theme:string):IColors{
             BACKGROUND_VIEW:'#393939',
             SECONDARY: '#131313',
             FONT_COLOR: 'white',
+            BORDER_COLOR: '#white'
         }
     }
 
     return {
         PRIMARY: '#00B0A6',
-        BACKGROUND_VIEW:'#D8D8D8',
+        BACKGROUND_VIEW:'#DBDBDB',
         SECONDARY: 'white',
         FONT_COLOR: 'black',
+        BORDER_COLOR: '#white'
     }
 }
 
