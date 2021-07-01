@@ -62,7 +62,7 @@ const Index = (props: componentNameProps) => {
   if (loading) return <ActivityIndicator />
   
   return (
-    <Container {...props}>
+    <Container>
       <View style={{
         backgroundColor: props.colors_theme.SECONDARY,
         paddingHorizontal:10,
