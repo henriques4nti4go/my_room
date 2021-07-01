@@ -62,6 +62,8 @@ function index(props:IProps) {
                     <Icon size={20} color={colorsBorder}  name={props.nameIcon || 'user'} type={props.typeIcon || 'font-awesome-5'} />
                 </View>
                 <TextInput 
+            
+                placeholderTextColor={props.colors_theme.FONT_COLOR}
                 editable={props.editable}
                 multiline={props.multiline}
                 maxLength={props.maxLength}
@@ -70,7 +72,8 @@ function index(props:IProps) {
                 onFocus={() => setColorBorder(props.colors_theme.PRIMARY) }
                 onBlur={() => setColorBorder(props.colors_theme.BORDER_COLOR) }
                 style={[
-                    localStyle.flex
+                    localStyle.flex,
+                    {color:props.colors_theme.FONT_COLOR}
                 ]}
                 placeholder={props.placeholder}/>
             </View>

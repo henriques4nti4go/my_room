@@ -101,7 +101,7 @@ const Index = (props: componentNameProps) => {
     return (
         <Container>
             <View style={[{backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},styles.shadowBox]}>
-                <Text style={{fontWeight:'bold',fontSize:25}}>Editar Perfil</Text>
+                <Text style={{fontWeight:'bold',fontSize:25,color:props.colors_theme.FONT_COLOR}}>Editar Perfil</Text>
             </View>
             <View style={[
                 {backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},
@@ -136,27 +136,6 @@ const Index = (props: componentNameProps) => {
                     />
                 </View>
                 <View
-                style={{
-                    flexDirection:'row',
-                    marginBottom:10
-                }}
-                >
-                    <View style={{flex:1,marginRight:10}}>
-                        <TextInput
-                        editable={!loading}
-                        nameIcon='user-tie'
-                        placeholder='Digite seu nome de usuario'
-                        value={userName}
-                        multiline={true}
-                        maxLength={150}
-                        onChangeText={(text) => setUserName(text) }
-                        />
-                    </View>
-                    <Button 
-                    onPress={() => updateUserName()}
-                    >Enviar</Button>
-                </View>
-                <View
                 style={[
                     style.mb1
                 ]}
@@ -168,6 +147,26 @@ const Index = (props: componentNameProps) => {
                             !loading ? 'atualizar' : '' 
                         }
                     </Button>
+                </View>
+
+                <View
+                style={{
+                    flexDirection:'row',
+                    marginBottom:10
+                }}
+                >
+                    <View style={{flex:1,marginRight:10}}>
+                        <TextInput
+                        editable={!loading}
+                        nameIcon='user-tie'
+                        placeholder='Digite seu nome de usuario'
+                        value={userName}
+                        onChangeText={(text) => setUserName(text) }
+                        />
+                    </View>
+                    <Button 
+                    onPress={() => updateUserName()}
+                    >Atualizar nome de usuário</Button>
                 </View>
             </View>
         </Container>

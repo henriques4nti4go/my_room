@@ -41,6 +41,19 @@ const styles = StyleSheet.create({
     cardPadding:{
         paddingHorizontal:10,
         paddingVertical: 10
+    },
+    card: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        paddingHorizontal:10,
+        paddingVertical: 10,
+        borderRadius:10
     }
 });
 export default styles;

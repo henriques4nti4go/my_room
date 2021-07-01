@@ -15,7 +15,8 @@ export const endpoints  = {
             get_messages: `${address_api}/user/messages/get_messages_room`,
             send_message_room: `${address_api}/user/messages/send_message_room`,
             websocket: address_websocket
-        }
+        },
+        setTheme: `${address_api}/user/set_theme`
     },
     room: {
         get_rooms: `${address_api}/room`,
@@ -24,5 +25,6 @@ export const endpoints  = {
         delete: `${address_api}/delete`,
     },
     token: `${address_api}/getToken`,
-    teste: `${DATABASE_HOST}`
+    teste: `${DATABASE_HOST}`,
+    
 }

@@ -11,9 +11,9 @@ const Reducer = (state = InitialState, action:InterfaceReducer) => {
     switch (action.type) {
         case 'ROOM_SELECTED':
             state.room_selected  =  action.payload.room_selected;
-            break;
+            return {...state};
     }
-    return state;
+    return {...state};
 }
 
 export default Reducer;

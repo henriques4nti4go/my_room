@@ -31,7 +31,7 @@ function colors(theme:string):IColors{
             BACKGROUND_VIEW:'#393939',
             SECONDARY: '#131313',
             FONT_COLOR: 'white',
-            BORDER_COLOR: '#white'
+            BORDER_COLOR: 'white'
         }
     }
 

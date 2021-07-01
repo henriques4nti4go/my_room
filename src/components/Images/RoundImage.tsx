@@ -10,9 +10,7 @@ interface RoundImageProps {
 
 const RoundImage = (props: RoundImageProps) => {
   return (
-    <View style={style.shadowBox}>
-      <Image source={props.source} style={[{width:100,height:100,borderRadius:100}]}/>
-    </View>
+    <Image source={props.source} style={[{width:100,height:100,borderRadius:100,backgroundColor:'white'},style.shadowBox]}/>
   );
 };
 
