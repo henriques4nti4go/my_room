@@ -9,7 +9,12 @@ export class ProcessDate {
         const year      =   date.getFullYear();
         const hours     =   date.getHours();
         const minutes   =   date.getMinutes();
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
+        return `${this.formatNumber(day)}/${this.formatNumber(month)}/${this.formatNumber(year)} ${this.formatNumber(hours)}:${this.formatNumber(minutes)}`;
+    }
+
+    private formatNumber(number:number) {
+        if (number > 9) return number;
+        return `0${number}`;
     }
 }
 

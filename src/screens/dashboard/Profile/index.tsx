@@ -68,10 +68,12 @@ const Index = (props: componentNameProps) => {
           </View>
           {/* <ProfileInformation {...props.profile_user}/> */}
       </View>
-      <View style={[
+      {
+        props.profile_user.bio &&
+        <View style={[
         // style.container,
-        {marginVertical:20,width:'95%',alignSelf:'center'}
-      ]}>
+          {marginVertical:20,width:'95%',alignSelf:'center'}
+        ]}>
         <View style={[
           style.card,
           {backgroundColor: props.colors_theme.SECONDARY,borderRadius:5}
@@ -82,7 +84,8 @@ const Index = (props: componentNameProps) => {
             </Text>
           </View>
         </View>
-      </View>
+        </View>
+      }
     </ScrollView>
   );
 };

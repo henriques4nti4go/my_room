@@ -20,7 +20,7 @@ interface CardMessageProps {
 function Index(props:CardMessageProps) {
 
     const isUserMessage = Number(props.user_id) === Number(props.user.user_id);
-
+    console.log(props.user)
     const date = new ProcessDate();
     return (
         <View style={{flexDirection:'row',marginVertical:5,marginHorizontal:5}}>
@@ -50,7 +50,7 @@ function Index(props:CardMessageProps) {
                 flex:1
             },style.shadowBox]}
             >
-                <Text style={{color: props.colors_theme.FONT_COLOR,fontWeight: 'bold',marginBottom:5}}>{props.user_name}</Text>
+                <Text style={{color: props.colors_theme.FONT_COLOR,fontWeight: 'bold',marginBottom:5}}>{props.user_name ? props.user_name : 'usuario desativado'}</Text>
                 <Text
                 style={{
                     color:props.colors_theme.FONT_COLOR,

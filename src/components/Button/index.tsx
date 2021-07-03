@@ -6,6 +6,7 @@ interface IProps {
     onPress: Function;
     colors_theme?: any;
     loading?:boolean;
+    style?:any;
 }
 
 const Button = (props: IProps) => {
@@ -13,15 +14,18 @@ const Button = (props: IProps) => {
   return (
         <TouchableOpacity
         disabled={loading}
-        style={{
-            backgroundColor:props.colors_theme.PRIMARY,
-            minHeight:30,
-            paddingHorizontal:10,
-            paddingVertical:10,
-            justifyContent:'center',
-            alignItems:'center',
-            borderRadius:5
-        }}
+        style={[
+            {
+                backgroundColor:props.colors_theme.PRIMARY,
+                minHeight:30,
+                paddingHorizontal:10,
+                paddingVertical:10,
+                justifyContent:'center',
+                alignItems:'center',
+                borderRadius:5
+            },
+            props.style
+        ]}
         onPress={() => props.onPress()}
         >
             <View style={{flexDirection:'row'}}>
