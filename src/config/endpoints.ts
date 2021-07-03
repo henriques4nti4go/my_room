@@ -22,9 +22,10 @@ export const endpoints  = {
     },
     room: {
         get_rooms: `${address_api}/room`,
-        create: `${address_api}/create`,
-        update: `${address_api}/update`,
-        delete: `${address_api}/delete`,
+        create: `${address_api}/room/create`,
+        update: `${address_api}/room/update`,
+        delete: `${address_api}/room/delete`,
+        my_rooms: `${address_api}/room/my_rooms`
     },
     token: `${address_api}/getToken`,
     teste: `${DATABASE_HOST}`,

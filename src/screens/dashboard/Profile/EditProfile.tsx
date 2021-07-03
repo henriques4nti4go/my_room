@@ -85,7 +85,6 @@ const Index = (props: componentNameProps) => {
                     'token': props.user_access_token
                 }
             });
-            console.log(data)
             if (!data.error) {
                 props.update_user_name({
                     user_name:userName

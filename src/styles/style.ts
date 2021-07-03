@@ -54,6 +54,9 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
         paddingVertical: 10,
         borderRadius:10
+    },
+    fontSize: {
+        fontSize: 20
     }
 });
 export default styles;

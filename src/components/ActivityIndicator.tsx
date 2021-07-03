@@ -2,13 +2,14 @@ import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import {connect} from 'react-redux';
+import { colors, style } from '_styles/*';
 interface componentNameProps {
   colors_theme:any
 }
 
 const componentName = (props: componentNameProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor:props.colors_theme.BACKGROUND_VIEW}]}>
       <ActivityIndicator color={props.colors_theme.PRIMARY} size='small'/>
     </View>
   );

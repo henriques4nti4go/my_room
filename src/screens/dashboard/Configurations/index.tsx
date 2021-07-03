@@ -85,7 +85,7 @@ const componentName = (props: componentNameProps) => {
         </View>
         <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => props.navigation.navigate('EditProfile')}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='user' />
-          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR}}>Editar Perfil</Text>
+          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR,fontWeight:'bold'}}>Editar Perfil</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => {
           firebase.auth().signOut().then((res) => {
@@ -93,13 +93,13 @@ const componentName = (props: componentNameProps) => {
           })
         }}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='sign-out-alt' />
-          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR}}>Logout</Text>
+          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR,fontWeight:'bold'}}>Logout</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => {
           setVisibleModal(true)
         }}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='trash-alt' />
-          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR}}>Apagar conta</Text>
+          <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR,fontWeight:'bold'}}>Apagar conta</Text>
         </TouchableOpacity>
       </View>
       <Modal

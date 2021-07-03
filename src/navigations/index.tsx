@@ -13,7 +13,7 @@ import Configurations from '_screens/dashboard/Configurations/index';
 import { createStackNavigator } from '@react-navigation/stack';
 import MyTabBar from '_components/MyDrawerBar';
 import MessagesRoom from '_screens/dashboard/Room/Messages';
-
+import MyRooms from '_screens/dashboard/Room/MyRooms';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -25,7 +25,7 @@ function TabNav() {
       initialRouteName="Home" 
       tabBar={(props) => <MyTabBar {...props} />}>
         <Tab.Screen name="Home" component={Home} />
-        {/* <Tab.Screen name="Room" component={Room} /> */}
+        <Tab.Screen name="MyRooms" component={MyRooms} />
         <Tab.Screen name="CreateRoom" component={CreateRoom} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name="Configurations" component={Configurations} />

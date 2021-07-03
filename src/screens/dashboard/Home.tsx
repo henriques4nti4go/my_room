@@ -1,5 +1,5 @@
 import * as React  from 'react';
-import { Text, View,StyleSheet,FlatList, TouchableOpacity, } from 'react-native';
+import { Text, View,StyleSheet,FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { AirbnbRating } from "react-native-elements";
 import {style} from '_styles/';
 import {
@@ -35,6 +35,12 @@ const Index = (props: componentNameProps) => {
     FONT_COLOR,
     BACKGROUND_VIEW
   } = colors(props.device_theme);
+
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      getRooms();
+    });
+  },[props.navigation])
 
   React.useEffect(() => {
     getRooms();
@@ -81,7 +87,9 @@ const Index = (props: componentNameProps) => {
         }}>
         <Text style={{color:props.colors_theme.FONT_COLOR}}>Encontre uma sala que mais <Text style={{color:props.colors_theme.PRIMARY,fontWeight:'bold'}}>combina</Text> com você</Text>
       </View>
-      <CardsRoom navigation={props.navigation} data={rooms} />
+      <ScrollView showsVerticalScrollIndicator={false} style={{marginVertical:10}}>
+        <CardsRoom navigation={props.navigation} data={rooms} />
+      </ScrollView>
     </Container>
   );
 };

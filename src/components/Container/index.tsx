@@ -3,9 +3,13 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import { style } from '_styles/';
 import {colors,style as styles} from '_styles/'
 import {connect} from 'react-redux';
+import Header from '_components/Header';
+
 interface ContainerProps {
     colors_theme:IColors;
-    children:any
+    children:any;
+    header?:any;
+    navigation?:any;
 }
 
 interface IColors {
@@ -16,31 +20,43 @@ interface IColors {
 }
 
 const Container = (props:ContainerProps) => { 
+    
     return (
-        <View style={[
-            style.body,
+        <View
+        style={[style.body,{flex:1}]}
+        >
             {
-                backgroundColor: props.colors_theme.BACKGROUND_VIEW,
-                flex:1
-            }
-        ]}>
-            {/* <View style={[{
-                backgroundColor: props.colors_theme.SECONDARY,paddingVertical:10,
-            },styles.shadowBox]}>
-                <View style={{width: '90%',alignSelf: 'center'}}>
-                    <Image style={{width:114,height:22}} source={require('_assets/my_room.png')} />
-                </View>
-            </View> */}
-            <View
-            style={[
+                props.header && 
+                <Header 
+                navigation={props.navigation}
+                >{props.header}</Header>
+            }      
+            <View style={[
+                
                 {
-                width: '90%',
-                alignSelf: 'center',
-                flex:1
+                    backgroundColor: props.colors_theme.BACKGROUND_VIEW,
+                    flex:1,
+                    paddingTop:15
                 }
-            ]}
-            >
-                {props.children}
+            ]}>
+                {/* <View style={[{
+                    backgroundColor: props.colors_theme.SECONDARY,paddingVertical:10,
+                },styles.shadowBox]}>
+                    <View style={{width: '90%',alignSelf: 'center'}}>
+                        <Image style={{width:114,height:22}} source={require('_assets/my_room.png')} />
+                    </View>
+                </View> */}
+                <View
+                style={[
+                    {
+                    width: '90%',
+                    alignSelf: 'center',
+                    flex:1
+                    }
+                ]}
+                >
+                    {props.children}
+                </View>
             </View>
         </View>
     );

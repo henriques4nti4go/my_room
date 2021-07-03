@@ -9,11 +9,14 @@ import { style } from '_styles/';
 import WebSocketClass from '../../../classes/WebSocket.class';
 import CardMessage from '_components/Room/CardMessage';
 import Container from '_components/Container';
+
 interface RoomMessagesProps {
   navigation:any;
   user_access_token:string;
   room_selected:string;
-  user:any
+  user:any;
+  room:any;
+  colors_theme: any;
 }
 
 const initialState = {ws:null};
@@ -88,10 +91,17 @@ const Index = (props: RoomMessagesProps) => {
     }
   }
 
+  function HeaderMessages() {
+    return <Text style={[{color: props.colors_theme.FONT_COLOR,fontSize:25,fontWeight:'bold'}]}>{props.room.title}</Text>
+  }
+
   if (loading) return <ActivityIndicator />
   
   return (
-    <Container>
+    <Container
+    navigation={props.navigation}
+    header={<HeaderMessages/>}
+    >
       <FlatList 
       showsVerticalScrollIndicator={false}
       refreshing={true}
@@ -116,7 +126,9 @@ const mapState = (state:any) => ({
   user_access_token: state.user.user_access_token,
   profile_user: state.profile_user,
   user: state.user,
-  room_selected: state.room.room_selected
+  room_selected: state.room.room_selected,
+  room: state.room,
+  colors_theme: state.device.colors_theme
 })
 
 const mapDispatch = {

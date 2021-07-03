@@ -74,7 +74,14 @@ const Index = (props:Props) =>{
                 return (
                     <TouchableOpacity 
                     onPress={() => {
-                        props.setRoomSelected(item.id);
+                        const payload = {
+                            room_id: item.id,
+                            title: item.roomDetails.title,
+                            description: item.roomDetails.description,
+                            created_at: item.roomDetails.created_at,
+                        }
+                    
+                        props.setRoomSelected(payload);
                         props.navigation.navigate('MessagesRoom');
                     }
                     }><RoomContent {...item} /></TouchableOpacity>
@@ -94,10 +101,8 @@ const mapState = (state:any) => ({
   
   const mapDispatch = (dispatch:any) => {
     return {
-      setRoomSelected: (value:string) =>{ dispatch({
-        payload:{
-            room_selected:value
-        },
+      setRoomSelected: (payload:any) =>{ dispatch({
+        payload,
         type:'ROOM_SELECTED'
       })},
     }

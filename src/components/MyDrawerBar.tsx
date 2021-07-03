@@ -54,6 +54,10 @@ const TabBar = (props:any) => {
                 iconName = 'plus';
                 typeIcon = 'font-awesome-5';
                 break;     
+            case 'MyRooms':
+                iconName = 'person-booth';
+                typeIcon = 'font-awesome-5';
+                break;     
             default:
                 break;
         } 
