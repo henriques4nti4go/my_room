@@ -1,16 +1,12 @@
 import * as React  from 'react';
-import { View, StyleSheet,Text, Alert} from 'react-native';
+import { View, StyleSheet,Text, Alert,Image} from 'react-native';
 import {connect} from 'react-redux';
 import ProfileImage from '_components/Profile/ProfileImage';
 import ProfileInformation from '_components/Profile/ProfileInformation';
 import ProfileEdit from '_components/Profile/ProfileEdit';
 import style from '../../../styles/style';
 import TextInput from '_components/TextInput';
-import {
-    Title,
-    // TextInput,
-    ActivityIndicator
-} from 'react-native-paper';
+import ActivityIndicator from '_components/ActivityIndicator';
 import {
     Input,
     Icon
@@ -22,6 +18,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Button from '_components/Button';
 import Container from '_components/Container';
 import {style as styles} from '_styles/';
+import SelectImage from '_components/Images/SelectImage';
 interface componentNameProps {
   profile_user: any;
   navigation: any;
@@ -87,7 +84,7 @@ const Index = (props: componentNameProps) => {
             });
             if (!data.error) {
                 props.update_user_name({
-                    user_name:userName
+                    user_name:String(userName).toLowerCase()
                 });
                 Alert.alert('Sucesso!','O nome de usuario foi atualizado!');
             }
@@ -97,6 +94,7 @@ const Index = (props: componentNameProps) => {
         setLoading(false);
     }
 
+    if (loading) return <ActivityIndicator />
     return (
         <Container>
             <View style={[{backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},styles.shadowBox]}>
@@ -106,6 +104,13 @@ const Index = (props: componentNameProps) => {
                 {backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},
                 styles.shadowBox
             ]}>
+                <View
+                style={[
+                    style.mb1
+                ]}
+                >
+                    <SelectImage />
+                </View>
                 <View
                 style={[
                     style.mb1
@@ -147,26 +152,27 @@ const Index = (props: componentNameProps) => {
                         }
                     </Button>
                 </View>
-
+            </View>
+            <View style={[{backgroundColor:props.colors_theme.SECONDARY,paddingVertical:10,paddingHorizontal:10,borderRadius:5,marginTop:20},styles.shadowBox]}>
                 <View
-                style={{
-                    flexDirection:'row',
-                    marginBottom:10
-                }}
-                >
-                    <View style={{flex:1,marginRight:10}}>
-                        <TextInput
-                        editable={!loading}
-                        nameIcon='user-tie'
-                        placeholder='Digite seu nome de usuario'
-                        value={userName}
-                        onChangeText={(text) => setUserName(text) }
-                        />
+                    style={{
+                        flexDirection:'column',
+                        // marginBottom:10
+                    }}
+                    >
+                        <View style={{marginBottom:10}}>
+                            <TextInput
+                            editable={!loading}
+                            nameIcon='user-tie'
+                            placeholder='Digite seu nome de usuario'
+                            value={userName}
+                            onChangeText={(text) => setUserName(text) }
+                            />
+                        </View>
+                        <Button 
+                        onPress={() => updateUserName()}
+                        >Atualizar nome de usuário</Button>
                     </View>
-                    <Button 
-                    onPress={() => updateUserName()}
-                    >Atualizar nome de usuário</Button>
-                </View>
             </View>
         </Container>
     );

@@ -1,12 +1,10 @@
 import React,{useEffect, useState} from 'react';
-import { Text, View, StyleSheet,TouchableOpacity,Image } from 'react-native';
+import { Text, View, StyleSheet,TouchableOpacity,Image, Alert } from 'react-native';
 import {
-    Button, 
     Text as TextPaper,
 } from 'react-native-paper';
 
 import {ID_CLIENT_GOOGLE} from "@env";
-
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import axios from 'axios';
@@ -17,8 +15,10 @@ import ActivityIndicator from '_components/ActivityIndicator';
 import {endpoints} from '_config/endpoints';
 import {connect} from 'react-redux';
 import {IHTTPResponse} from '_classes/interfaces/IHTTPResponse.interface';
-
-WebBrowser.maybeCompleteAuthSession();
+// import {style as styles} from '_styles/';
+import TextInput from '_components/TextInput';
+import Button from '_components/Button';
+import User from '../../utils/sqlite/models/User';
 
 
 interface componentNameProps {
@@ -32,38 +32,56 @@ interface componentNameProps {
 
 
 function Index(props:componentNameProps) {
-    const [isLoading,setIsLoading] = useState(true);
-    const [request, response, promptAsync] = Google.useIdTokenAuthRequest(
-        {
-            clientId: ID_CLIENT_GOOGLE,
-        },
-    );
+    const [isLoading,setIsLoading] = useState(false);
 
-    const [reciveRequestGoogle,setReciveRequestGoogle] = useState(false);
-
-    
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
 
     useEffect(() => {
-        authUserWithGoogleFirebase(response);
-    },[response]);
-
-    useEffect(() => {
-        runCheckAtStart();
+        hasUserLoged();
     },[]);
     
+    async function hasUserLoged() {
+        setIsLoading(true)
+        try {
+            const user = new User();
+            // await user.exec(`insert into users (email,password) values ('paulo@email.com','123')`)
+            // console.log(await user.exec(`select * from users`))
+            // return ;
+            const user_saved:any = await user.exec(`select * from users`);
+            const user_info = user_saved.rows._array;
+            if (user_saved.rows._array.length) {
+                requestAndAccess(user_info[0].email,user_info[0].password)
+            }
+            return;
+        } catch (error) {
+            
+        }
+        setIsLoading(false);
+    }
+
+    async function saveUser(email:string,password:string) {
+        const user = new User();
+        const hasUser:any = await user.exec(`SELECT * FROM users WHERE email='${email}'`);
+        
+        if (!hasUser.length)
+            await user.exec(`INSERT INTO users(email,password) values ('${email}','${password}')`);
+    }
+
     /**
      * @name getToken
      * @param token_id
      * @returns 
      * @description makes the request and returns the app's access token
      */
-    async function getToken(token_id:string):Promise<IHTTPResponse>{
+    async function getToken({email,password}:any):Promise<IHTTPResponse>{
         try {
             let {data} = await axios({
                 method: 'POST',
                 url: endpoints.token,
-                headers:{
-                    'token_oauth': token_id,
+                data: {
+                    email,
+                    password
                 }
             });
             return data.response;
@@ -73,46 +91,23 @@ function Index(props:componentNameProps) {
     }
 
     /**
-     * @name signUp
-     * @param access_id 
-     * @returns
-     * @description get the refresh token and register a new user 
-     */
-    async function signUp(access_id:string):Promise<IHTTPResponse> {
-        try {
-            let {data} = await axios({
-                method: 'POST',
-                url: endpoints.user.signUp,
-                headers:{
-                    'access_id': access_id,
-                }
-            });
-
-            return data;
-        } catch (error:any) {
-            return error.response.data;
-        }
-    }
-
-    /**
      * @name signIn
      * @param token_id 
      * @returns 
      * @description returns user information
      */
-    async function signIn(token_id:string):Promise<IHTTPResponse> {
+    async function signIn(email:string,password:string):Promise<IHTTPResponse> {
+        
         try {
-            
-            let response:any = await getToken(token_id);
-            
+            let response:any = await getToken({email,password});
             if (response.error) {
                 if (String(response.descriptionError).toLocaleUpperCase() == 'Unregistered user'.toLocaleUpperCase()){
-                    await signUp(token_id)
+                    response.response = {message:'O usuario não está registrado!'};
+                    
+                    return response;
                 }
             }
             
-            response = await getToken(token_id);
-
             let {data} = await axios({
                 method: 'POST',
                 url: endpoints.user.get_user,
@@ -120,6 +115,7 @@ function Index(props:componentNameProps) {
                     'token': response.token_jwt,
                 }
             });
+
             data.response['token_jwt'] = response.token_jwt;
             
             return data;
@@ -128,87 +124,63 @@ function Index(props:componentNameProps) {
         }
     }
 
-    /**
-     * @name verifyUserLogged
-     * @returns string
-     * @description check if the user has already connected from the device
-     */
-    async function verifyUserLogged():Promise<string> {
-        return new Promise((resolve, reject) => {
-            try {
-                firebase.auth().onAuthStateChanged(async (user) => {
-                    const getIdToken:any = await user?.getIdToken();
-                    resolve(getIdToken);
-                });
-            } catch (error) {
-                reject(error);
-            }
-        })
+    function validationFields() {
+        // return console.log(email.length)
+        if (email.length === 0) throw 'o campo email não pode ficar vazio!';
+        if (password.length === 0) throw 'o campo de senha não pode ficar vazio!';
+    }
+
+    async function requestAndAccess(email:string,password:string) {
+        
+        const response_data_user = await signIn(email,password);
+        console.log(response_data_user)
+        if (!response_data_user.error) {
+            let {
+                user,
+                user_id,
+                name,
+                user_name,
+                bio
+            } = response_data_user.response.profile;
+            let url = response_data_user.response.profile_photo ? response_data_user.response.profile_photo.url : null;
+            const {
+                theme
+            } = response_data_user.response.appTheme; 
+            props.setTokenAccess(response_data_user.response.token_jwt);
+            props.setUser({user});
+            props
+            props.setInfoProfileUser({
+                email:user.email,
+                name,
+                user_name,
+                profile_photo: url,
+                bio
+            });
+
+            saveUser(email,password);
+            props.setAppTheme(theme)
+            props.navigation.navigate('Home');
+        } else {
+            Alert.alert('Erro!','ocorreu um erro');
+        }
     }
 
     /**
-     * @description just a function to check if the user is already logged in by the device
-     */
-    async function runCheckAtStart(){
-        let token = await verifyUserLogged();    
-        verifyUser(token);
-    }
-
-    /**
-     * @name verifyUser
+     * @name access
      * @param token_id
      * @description main function that performs user authentication
      */
-    async function verifyUser(token_id:string):Promise<void> {
-       
+    async function access(email:string,password:string):Promise<void> {
         setIsLoading(true);    
-        if (token_id) {
-            // const auth:PatternResponse = await new OperationsAuthUser(token_id).authUser();
-            const response_data_user = await signIn(token_id);
-            console.log(response_data_user)
-            if (!response_data_user.error) {
-                let {
-                    user,
-                    user_id,
-                    name,
-                    user_name,
-                    bio
-                } = response_data_user.response.profile;
-                let {
-                    url,
-                } = response_data_user.response.profile_photo;
-                const {
-                    theme
-                } = response_data_user.response.appTheme; 
-                props.setTokenAccess(response_data_user.response.token_jwt);
-                props.setUser({user});
-                props
-                props.setInfoProfileUser({
-                    email:user.email,
-                    name,
-                    user_name,
-                    profile_photo: url,
-                    bio
-                });
-                props.setAppTheme(theme)
-                props.navigation.navigate('Home');
-            }
-
+        
+        try {
+            validationFields();
+            requestAndAccess(email,password);
+        } catch (error:any) {
+            console.log(error)
+            Alert.alert('Erro!',error);
         }
         setIsLoading(false);
-    }
-
-
-    async function authUserWithGoogleFirebase(response:any) {
-        
-        if (response?.type === 'success') {
-            const { id_token } = response.params;
-            const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-            let res = await firebase.auth().signInWithCredential(credential)
-            let token = await verifyUserLogged();
-            await verifyUser(token);
-            setReciveRequestGoogle(false)
-        }
     }
 
     if (isLoading) return <ActivityIndicator />
@@ -224,41 +196,77 @@ function Index(props:componentNameProps) {
             style={[
                 styles.align,
                 {
-                    flex:3,
-                    width: '80%'
+                    flex:1,
+                    width: '80%',
                 }
             ]}
             >
                 <Image 
                 style={{
-                    width: '100%',
-                    height: '10%'
+                    width: 265,
+                    height: 50,
                 }}
                 source={require('_assets/my_room.png')} />
             </View>
+            
             <View
             style={{
-                flex:1
+                flex:1,
+                width:'100%'
             }}
             >
-                <TouchableOpacity
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent:'center',
-                    shadowColor: "#000",
-                }}
-                onPress={() => {
-                    if (response){
-                        setIsLoading(true)
-                       return authUserWithGoogleFirebase(response)
-                    }
-                    promptAsync()
-                }}
+                <View
+                style={[
+                    styles.mb1,
+                ]}
                 >
-                    <Image style={{width:30,height:30,marginRight:10}} source={require('_assets/google.png')} />
-                    <Text style={{fontWeight:'bold'}}>Continue com Google</Text>
-                </TouchableOpacity>
+                    <TextInput
+                    editable={!isLoading}
+                    label='nome'
+                    nameIcon='envelope'
+                    placeholder='Digite seu nome de usuario'
+                    // value={name}
+                    onChangeText={(text) => setEmail(text) }
+                    />
+                </View>
+                <View
+                style={[
+                    styles.mb1,
+                ]}
+                >
+                    <TextInput
+                    editable={!isLoading}
+                    label='nome'
+                    secureTextEntry={true}
+                    placeholder='Digite a senha'
+                    nameIcon='key'
+                    // value={name}
+                    onChangeText={(text) => setPassword(text) }
+                    />
+                </View>
+                <View
+                style={[
+                    styles.mb1,
+                    {flexDirection: 'row'}
+                ]}
+                >
+                    <View style={{flex:1,marginRight:10}}>
+                        <Button
+                        loading={isLoading}
+                        onPress={() => access(email,password) }
+                        >
+                            Entrar
+                        </Button>
+                    </View>
+                    <View style={{flex:1}}>
+                        <Button
+                        loading={isLoading}
+                        onPress={() => props.navigation.navigate('UserInformationRegistration') }
+                        >
+                            Registrar
+                        </Button>
+                    </View>
+                </View>
             </View>
         </View>
     );

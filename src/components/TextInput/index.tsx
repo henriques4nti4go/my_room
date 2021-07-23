@@ -16,11 +16,18 @@ interface IProps {
     label: string;
     error: string;
     editable: boolean;
+    secureTextEntry:boolean;
 }
 
 function index(props:IProps) {
 
-    const [colorsBorder,setColorBorder] = React.useState(props.colors_theme.BORDER_COLOR);
+    // PRIMARY: '#00B0A6',
+    //         BACKGROUND_VIEW:'#DBDBDB',
+    //         SECONDARY: 'white',
+    //         FONT_COLOR: 'black',
+    //         BORDER_COLOR: '#C4C4C4'
+
+    const [colorsBorder,setColorBorder] = React.useState(props.colors_theme.BORDER_COLOR || '#C4C4C4');
     const [showError,setShowError] = React.useState(props.error ? true : false);
     const localStyle = StyleSheet.create({
         boderInput:{
@@ -62,15 +69,15 @@ function index(props:IProps) {
                     <Icon size={20} color={colorsBorder}  name={props.nameIcon || 'user'} type={props.typeIcon || 'font-awesome-5'} />
                 </View>
                 <TextInput 
-            
+                secureTextEntry={props.secureTextEntry}
                 placeholderTextColor={props.colors_theme.FONT_COLOR}
                 editable={props.editable}
                 multiline={props.multiline}
                 maxLength={props.maxLength}
                 value={props.value}
                 onChangeText={(text) => props.onChangeText(text)}
-                onFocus={() => setColorBorder(props.colors_theme.PRIMARY) }
-                onBlur={() => setColorBorder(props.colors_theme.BORDER_COLOR) }
+                onFocus={() => setColorBorder(props.colors_theme.PRIMARY || '#00B0A6') }
+                onBlur={() => setColorBorder(props.colors_theme.BORDER_COLOR || '#C4C4C4') }
                 style={[
                     localStyle.flex,
                     {color:props.colors_theme.FONT_COLOR}

@@ -16,7 +16,7 @@ const Button = (props: IProps) => {
         disabled={loading}
         style={[
             {
-                backgroundColor:props.colors_theme.PRIMARY,
+                backgroundColor:props.colors_theme.PRIMARY || '#00B0A6',
                 minHeight:30,
                 paddingHorizontal:10,
                 paddingVertical:10,

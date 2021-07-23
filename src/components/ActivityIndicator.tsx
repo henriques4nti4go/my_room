@@ -10,7 +10,7 @@ interface componentNameProps {
 const componentName = (props: componentNameProps) => {
   return (
     <View style={[styles.container,{backgroundColor:props.colors_theme.BACKGROUND_VIEW}]}>
-      <ActivityIndicator color={props.colors_theme.PRIMARY} size='small'/>
+      <ActivityIndicator color={props.colors_theme.PRIMARY || '#00B0A6'} size='small'/>
     </View>
   );
 };

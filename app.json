@@ -1,13 +1,14 @@
 {
   "expo": {
+    "scheme": "myroomredirect",
     "name": "MyRoom",
     "slug": "MyRoom",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_myroom.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/splash_myroom.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -20,10 +21,11 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package":"com.phsa.myroom",
       "versionCode":1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon_myroom.png",
         "backgroundColor": "#FFFFFF"
       }
     },

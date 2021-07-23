@@ -20,13 +20,9 @@ const InitialState:{
     bio: '',
 };
 
-const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
+const Reducer = (state = InitialState, action:InterfaceReducer) => {
     
     switch (action.type) {
-        case 'USER_ACCESS_TOKEN':
-
-            state.user_access_token  =  action.payload.user_access_token;
-            return {...state};
         case 'SET_PROFILE_USER_INFORMATION':
             state.email             =   action.payload.email;
             state.name              =   action.payload.name;
@@ -41,6 +37,9 @@ const Reducer = (state:any = InitialState, action:InterfaceReducer) => {
         case 'UPDATE_USER_NAME':
             state.user_name         =   action.payload.user_name;
             return {...state};
+        case 'UPDATE_IMAGE_PROFILE':
+            state.profile_photo = action.payload.uri;
+        return {...state};
     }
     return {...state};
 }

@@ -16,6 +16,7 @@ export const endpoints  = {
             send_message_room: `${address_api}/user/messages/send_message_room`,
             websocket: address_websocket
         },
+        update_profile_photo: `${address_api}/user/media/update_profile_photo`,
         setTheme: `${address_api}/user/set_theme`,
         deleteUser: `${address_api}/user/delete_user`,
         signUp: `${address_api}/signUp`

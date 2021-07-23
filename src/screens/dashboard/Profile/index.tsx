@@ -20,7 +20,7 @@ interface IProfileUser {
 }
 
 const Index = (props: componentNameProps) => {
-  console.log(props)
+  
   React.useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       
@@ -54,8 +54,10 @@ const Index = (props: componentNameProps) => {
           
           </View>
           <View style={{top:-40,width:'90%',alignSelf:'center'}}>
-            <View>
+            <View style={{flexDirection:"row"}}>
               <RoundImage source={{uri: props.profile_user.profile_photo}} />
+              <View style={{flex:1}}>
+              </View>
             </View>
             <View>
               <View>

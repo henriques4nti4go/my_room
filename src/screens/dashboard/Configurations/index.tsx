@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet,TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet,TouchableOpacity, Alert } from 'react-native';
 import style from '../../../styles/style';
 import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
@@ -11,6 +11,7 @@ import {endpoints} from '_config/endpoints';
 import ActivityIndicator from '_components/ActivityIndicator';
 import Modal from '_components/Modal';
 import Button from '_components/Button';
+import User from '../../../utils/sqlite/models/User';
 interface componentNameProps {
   setAppTheme:Function;
   navigation:any;
@@ -58,15 +59,36 @@ const componentName = (props: componentNameProps) => {
         }
       })
       if (!data.error) {
-        firebase.auth().signOut().then((res) => {
-          props.navigation.navigate('SignIn')
-        })
+      const user = new User();
+      const response:any = await user.exec('DELETE FROM users WHERE id > 0');
+      if (!response.error){
+        props.navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error','Ocorreu um erro.');
+      }
+      setIsLoading(false);
       }
     } catch (error) {
-      
     }
     setIsLoading(false);
   }
+
+  async function Logout() {
+    setIsLoading(true);
+    try {
+      const user = new User();
+      const response:any = await user.exec('DELETE FROM users WHERE id > 0');
+      if (!response.error){
+        props.navigation.navigate('SignIn');
+      } else {
+        Alert.alert('Error','Ocorreu um erro.');
+      }
+    } catch (error) {
+      Alert.alert('Error','Ocorreu um erro.');
+    }
+    setIsLoading(false);
+  }
+
   if (loading) return <ActivityIndicator />
   return (
     <Container>
@@ -80,22 +102,18 @@ const componentName = (props: componentNameProps) => {
         style.cardPadding
       ]}
       >
-        <View style={{marginTop:10}}>
+        <View style={{marginVertical:10}}>
           <SwitchTheme onPress={(theme_selected:string) => setTheme(theme_selected)} theme={props.device_theme} />
         </View>
-        <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => props.navigation.navigate('EditProfile')}>
+        <TouchableOpacity style={{flexDirection:'row',marginVertical:10}} onPress={() => props.navigation.navigate('EditProfile')}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='user' />
           <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR,fontWeight:'bold'}}>Editar Perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => {
-          firebase.auth().signOut().then((res) => {
-            props.navigation.navigate('SignIn')
-          })
-        }}>
+        <TouchableOpacity style={{flexDirection:'row',marginVertical:10}} onPress={Logout}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='sign-out-alt' />
           <Text style={{alignSelf:'flex-end',marginLeft:20,color:props.colors_theme.FONT_COLOR,fontWeight:'bold'}}>Logout</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection:'row',marginTop:10}} onPress={() => {
+        <TouchableOpacity style={{flexDirection:'row',marginVertical:10}} onPress={() => {
           setVisibleModal(true)
         }}>
           <Icon color={props.colors_theme.PRIMARY} type='font-awesome-5' name='trash-alt' />
