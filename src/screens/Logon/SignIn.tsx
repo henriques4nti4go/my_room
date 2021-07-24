@@ -37,6 +37,16 @@ function Index(props:componentNameProps) {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
 
+    React.useEffect(() => {
+    
+        const resetStates = props.navigation.addListener('blur', () => {
+          setEmail('');
+          setPassword('');
+        });
+    
+        return resetStates;
+      }, [props.navigation]);
+
     useEffect(() => {
         hasUserLoged();
     },[]);
@@ -125,15 +135,29 @@ function Index(props:componentNameProps) {
     }
 
     function validationFields() {
+        let response:IHTTPResponse = {
+            code: 400,
+            descriptionCode: 'error',
+            error: true,
+            response: {
+                message:''
+            }
+        };
         // return console.log(email.length)
-        if (email.length === 0) throw 'o campo email não pode ficar vazio!';
-        if (password.length === 0) throw 'o campo de senha não pode ficar vazio!';
+        if (email.length === 0){
+            response.response.message = 'o campo email não pode ficar vazio!';
+            throw response;
+        };
+        if (password.length === 0) {
+            response.response.message = 'o campo de senha não pode ficar vazio!';
+            throw response;
+        }
     }
 
     async function requestAndAccess(email:string,password:string) {
-        
+        setIsLoading(true)
         const response_data_user = await signIn(email,password);
-        console.log(response_data_user)
+        
         if (!response_data_user.error) {
             let {
                 user,
@@ -161,8 +185,11 @@ function Index(props:componentNameProps) {
             props.setAppTheme(theme)
             props.navigation.navigate('Home');
         } else {
-            Alert.alert('Erro!','ocorreu um erro');
+            setEmail('');
+            setPassword('');
+            Alert.alert('Erro!', response_data_user.response.message);
         }
+        setIsLoading(false)
     }
 
     /**
@@ -171,16 +198,14 @@ function Index(props:componentNameProps) {
      * @description main function that performs user authentication
      */
     async function access(email:string,password:string):Promise<void> {
-        setIsLoading(true);    
         
         try {
             validationFields();
             requestAndAccess(email,password);
         } catch (error:any) {
-            console.log(error)
-            Alert.alert('Erro!',error);
+            Alert.alert('Erro!',error.response.message);
         }
-        setIsLoading(false);
+        
     }
 
     if (isLoading) return <ActivityIndicator />
@@ -221,6 +246,9 @@ function Index(props:componentNameProps) {
                 ]}
                 >
                     <TextInput
+                    fontColor='black'
+                    placeholderColor='#C4C4C4'
+                    borderColor='#C4C4C4'
                     editable={!isLoading}
                     label='nome'
                     nameIcon='envelope'
@@ -235,6 +263,9 @@ function Index(props:componentNameProps) {
                 ]}
                 >
                     <TextInput
+                    fontColor='black'
+                    placeholderColor='#C4C4C4'
+                    borderColor='#C4C4C4'
                     editable={!isLoading}
                     label='nome'
                     secureTextEntry={true}

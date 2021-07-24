@@ -17,6 +17,9 @@ interface IProps {
     error: string;
     editable: boolean;
     secureTextEntry:boolean;
+    borderColor?: string;
+    placeholderColor?:string;
+    fontColor?:string;
 }
 
 function index(props:IProps) {
@@ -27,7 +30,7 @@ function index(props:IProps) {
     //         FONT_COLOR: 'black',
     //         BORDER_COLOR: '#C4C4C4'
 
-    const [colorsBorder,setColorBorder] = React.useState(props.colors_theme.BORDER_COLOR || '#C4C4C4');
+    const [colorsBorder,setColorBorder] = React.useState(props.borderColor || props.colors_theme.BORDER_COLOR || '#C4C4C4');
     const [showError,setShowError] = React.useState(props.error ? true : false);
     const localStyle = StyleSheet.create({
         boderInput:{
@@ -69,8 +72,9 @@ function index(props:IProps) {
                     <Icon size={20} color={colorsBorder}  name={props.nameIcon || 'user'} type={props.typeIcon || 'font-awesome-5'} />
                 </View>
                 <TextInput 
+    
                 secureTextEntry={props.secureTextEntry}
-                placeholderTextColor={props.colors_theme.FONT_COLOR}
+                placeholderTextColor={props.placeholderColor || props.colors_theme.FONT_COLOR}
                 editable={props.editable}
                 multiline={props.multiline}
                 maxLength={props.maxLength}
@@ -80,7 +84,7 @@ function index(props:IProps) {
                 onBlur={() => setColorBorder(props.colors_theme.BORDER_COLOR || '#C4C4C4') }
                 style={[
                     localStyle.flex,
-                    {color:props.colors_theme.FONT_COLOR}
+                    {color:props.fontColor || props.colors_theme.FONT_COLOR}
                 ]}
                 placeholder={props.placeholder}/>
             </View>
